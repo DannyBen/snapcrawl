@@ -2,4 +2,5 @@ source "https://rubygems.org"
 
 gem 'runfile'
 gem 'nokogiri'
-gem 'filecache'
+# gem 'filecache'
+gem 'screencap'
