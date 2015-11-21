@@ -1,14 +1,54 @@
-name    "Greeter"
-summary "A sample Runfile"
+require 'fileutils'
+require 'filecache'
+
+name    "SnapCrawl"
+summary "Crawl a website and capture screenshots"
 version "0.1.0"
 
-usage  "hello [<name> --color]"
-help   "Say hello"
-option "-c --color", "Greet with color"
-action :hello do |args|
-  if args['--color']
-    say "!txtgrn!Hello #{args['<name>']}"
-  else
-    say "Hello #{args['<name>']}"
+@done = []
+
+usage  "snap <url> [--depth <n>]"
+help   "Crawl <url> and save screenshots"
+option "-d --depth <n>", "Number of levels to crawl. 2 means crawl the base URL and any page linked from it. [default: 1]"
+action :snap do |args|
+  depth = args['--depth'].to_i
+  urls  = [args['<url>']]
+  make_screenshot_dir
+
+  depth.times do 
+    urls = crawl_and_snap urls
   end
+end
+
+def crawl_and_snap(urls)
+  new_urls = []
+  urls.each do |url|
+    next if @done.include? url
+    @done << url
+    say "!txtgrn!Processing #{url}"
+    snap url
+    new_urls += extract_urls_from url
+  end
+  new_urls
+end
+
+def snap(url)
+  say "Snapping #{url}"
+end
+
+def extract_urls_from(url)
+  say "Extracting URLS from #{url}"
+  return ["asd.com"]
+end
+
+def soon
+  cache = FileCache.new
+  # cache.set(:key, "value")
+  puts cache.get(:key)     # "value"
+  # cache.delete(:key)
+  # puts cache.get(:key)     # nil
+end
+
+def make_screenshot_dir(dir='snaps')
+  Dir.exists? dir or FileUtils.mkdir_p dir
 end
