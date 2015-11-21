@@ -26,3 +26,13 @@ Option 2, manually:
 
 	$ run --help
 
+
+## TODO
+
+[ ] Add caching options to command line
+[ ] Add ignore regexes to command line or config
+[ ] Add exception handling for when snapping fails
+
+
+
+
