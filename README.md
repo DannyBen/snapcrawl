@@ -29,9 +29,11 @@ Option 2, manually:
 
 ## TODO
 
+- [ ] Add snap folder option to command line
 - [ ] Add caching options to command line
-- [ ] Add ignore regexes to command line or config
+- [ ] Add ignore regexes to command line
 - [ ] Add exception handling for when snapping fails
+- [ ] Maybe add config file to allow persistent options
 
 
 
