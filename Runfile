@@ -6,21 +6,32 @@ require 'pstore'
 
 name    "SnapCrawl"
 summary "Crawl a website and capture screenshots"
-version "0.1.0"
+version "0.1.1"
 
-@snap_age = 86400 # seconds
-@store    = PStore.new("snapcrawl.pstore")
-@done     = []
+trap(:INT) { abort "\nGoodbye" }
 
-usage  "snap <url> [--depth <n>]"
+@storefile = "snapcrawl.pstore"
+@store     = PStore.new(@storefile)
+@done      = []
+
+help   "Clears the links cache"
+action :cache do
+  say "Deleting #{@storefile}"
+  File.delete @storefile
+end
+
+usage  "snap <url> [--depth <n> --age <seconds> --dir <path>]"
 help   "Crawl <url> and save screenshots"
 option "-d --depth <n>", "Number of levels to crawl. 2 means crawl the base URL and any page linked from it. [default: 1]"
+option "-a --age <seconds>", "Number of seconds to consider a snapshot fresh. [default: 86400]"
+option "--dir <path>", "Set the folder where screenshots are stored. [default: snaps]"
 action :snap do |args|
-  depth = args['--depth'].to_i
-  @base = args['<url>']
-  urls  = [protocolize(@base)]
+  depth     = args['--depth'].to_i
+  @base     = args['<url>']
+  @snap_age = args['--age'].to_i # seconds
+  urls      = [protocolize(@base)]
+  @dir      = args['--dir']
 
-  @dir = "snaps"
   make_screenshot_dir @dir
 
   depth.times do 
@@ -52,7 +63,7 @@ end
 
 # Take a screenshot of the URL, even if file exists
 def snap!(url)
-  say "  Snapping #{url}"
+  say "  Snapping..."
 
   f = Screencap::Fetcher.new url
   screenshot = f.fetch(
@@ -77,7 +88,7 @@ def extract_urls_from(url)
 end
 
 def extract_urls_from!(url)
-  say "  Extracting links from #{url}"
+  say "  Extracting links..."
   doc = Nokogiri::HTML open url
   links = doc.css('a')
   links = normalize_links links
@@ -125,7 +136,7 @@ def normalize_links(links)
 
   # Remove links to images and other files
   extensions = "png|gif|jpg|pdf|zip"
-  links = links.reject {|link| link =~ /\.(#{extensions})$/}
+  links = links.reject {|link| link =~ /\.(#{extensions})(\?.*)?$/}
 
   # Remove mailto, tel links
   beginnings = "mailto|tel"
