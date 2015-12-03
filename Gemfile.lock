@@ -3,11 +3,11 @@ GEM
   specs:
     colsole (0.2.0)
     docopt (0.5.0)
-    mini_portile (0.6.2)
-    nokogiri (1.6.6.4)
-      mini_portile (~> 0.6.0)
+    mini_portile2 (2.0.0)
+    nokogiri (1.6.7)
+      mini_portile2 (~> 2.0.0.rc2)
     phantomjs (1.9.8.0)
-    runfile (0.5.2)
+    runfile (0.5.3)
       colsole (~> 0.2)
       docopt (~> 0.5)
     screencap (0.1.4)
@@ -20,3 +20,6 @@ DEPENDENCIES
   nokogiri
   runfile
   screencap
+
+BUNDLED WITH
+   1.10.6

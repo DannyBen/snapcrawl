@@ -6,7 +6,7 @@ require 'pstore'
 
 name    "SnapCrawl"
 summary "Crawl a website and capture screenshots"
-version "0.1.1"
+version "0.1.2"
 
 trap(:INT) { abort "\nGoodbye" }
 
@@ -20,60 +20,70 @@ action :cache do
   File.delete @storefile
 end
 
-usage  "snap <url> [--depth <n> --age <seconds> --dir <path>]"
+usage  "snap <url> [options]"
 help   "Crawl <url> and save screenshots"
 option "-d --depth <n>", "Number of levels to crawl. 2 means crawl the base URL and any page linked from it. [default: 1]"
 option "-a --age <seconds>", "Number of seconds to consider a snapshot fresh. [default: 86400]"
+option "-W --width <n>", "Set the screenshot width in pixels. [default: 1280]"
+option "-H --height <n>", "Set the screenshot height in pixels. 0 to capture entire page. [default: 0]"
 option "--dir <path>", "Set the folder where screenshots are stored. [default: snaps]"
 action :snap do |args|
   depth     = args['--depth'].to_i
   @base     = args['<url>']
-  @snap_age = args['--age'].to_i # seconds
-  urls      = [protocolize(@base)]
+  @snap_age = args['--age'].to_i
   @dir      = args['--dir']
+  urls      = [protocolize(@base)]
 
   make_screenshot_dir @dir
 
   depth.times do 
-    urls = crawl_and_snap urls
+    urls = crawl_and_snap urls, opts_from_args(args)
   end
 end
 
-def crawl_and_snap(urls)
+def crawl_and_snap(urls, opts)
   new_urls = []
   urls.each do |url|
     next if @done.include? url
     @done << url
     say "!txtgrn!Processing #{url}"
-    snap url
+    snap url, opts
     new_urls += extract_urls_from url
   end
   new_urls
 end
 
+def opts_from_args(args)
+  {
+    width: args['--width'].to_i,
+    height: args['--height'].to_i > 0 ? args['--height'].to_i : false,
+  }
+end
+
 # Take a screenshot of a URL, unless we already did so recently
-def snap(url)
+def snap(url, opts)
   file = image_path_for(url)
   if file_fresh? file
     say "  Skipping, file exists and seems fresh"
   else
-    snap!(url)
+    snap!(url, opts)
   end
 end
 
 # Take a screenshot of the URL, even if file exists
-def snap!(url)
+def snap!(url, opts)
   say "  Snapping..."
 
   f = Screencap::Fetcher.new url
-  screenshot = f.fetch(
-    :output => image_path_for(url),
-    ## Optionals:
-    :width => 1280,
-    # :height => 768,
-    # :div => '.header', # selector for a specific element to take screenshot of
-    # :top => 0, :left => 0, :width => 100, :height => 100 # dimensions for a specific area
-  )
+  fetch_opts = {}
+  fetch_opts[:output] = image_path_for(url)
+  fetch_opts[:width]  = opts[:width]
+  fetch_opts[:height] = opts[:height] if opts[:height]
+  # :height => 768,
+  # :div => '.header', # selector for a specific element to take screenshot of
+  # :top => 0, :left => 0, :width => 100, :height => 100 # dimensions for a specific area
+
+  screenshot = f.fetch fetch_opts 
 end
 
 def extract_urls_from(url)
