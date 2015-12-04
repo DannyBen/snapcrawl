@@ -1,3 +1,11 @@
+/dev
+/doc
+/coverage
+/gems
+/Gemfile.lock
+*.gem
+*.sublime*
+
 /snaps
 /snapcrawl.pstore
 /log.txt
