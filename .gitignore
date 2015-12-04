@@ -1,2 +1,4 @@
-snaps
-snapcrawl.pstore
+/snaps
+/snapcrawl.pstore
+/log.txt
+/err.txt

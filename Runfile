@@ -10,9 +10,9 @@ version "0.1.2"
 
 trap(:INT) { abort "\nGoodbye" }
 
-@storefile = "snapcrawl.pstore"
-@store     = PStore.new(@storefile)
-@done      = []
+@storefile  = "snapcrawl.pstore"
+@store      = PStore.new(@storefile)
+@done       = []
 
 help   "Clears the links cache"
 action :cache do
@@ -46,7 +46,7 @@ def crawl_and_snap(urls, opts)
   urls.each do |url|
     next if @done.include? url
     @done << url
-    say "!txtgrn!Processing #{url}"
+    say "\n!txtgrn!Processing #{url}"
     snap url, opts
     new_urls += extract_urls_from url
   end
@@ -64,7 +64,7 @@ end
 def snap(url, opts)
   file = image_path_for(url)
   if file_fresh? file
-    say "  Skipping, file exists and seems fresh"
+    say "#{'Snap:'.rjust 10} Skipping. File exists and seems fresh"
   else
     snap!(url, opts)
   end
@@ -72,7 +72,7 @@ end
 
 # Take a screenshot of the URL, even if file exists
 def snap!(url, opts)
-  say "  Snapping..."
+  say "!txtblu!#{'Snap!'.rjust 10}!txtrst! Snapping picture... "
 
   f = Screencap::Fetcher.new url
   fetch_opts = {}
@@ -84,13 +84,14 @@ def snap!(url, opts)
   # :top => 0, :left => 0, :width => 100, :height => 100 # dimensions for a specific area
 
   screenshot = f.fetch fetch_opts 
+  say "done"
 end
 
 def extract_urls_from(url)
   cached = nil
   @store.transaction { cached = @store[url] }
   if cached
-    say "  Getting subsequent links from cache"
+    say "#{'Crawl:'.rjust 10} Page was cached. Reading subsequent URLs from cache"
     return cached
   else
     return extract_urls_from! url
@@ -98,11 +99,19 @@ def extract_urls_from(url)
 end
 
 def extract_urls_from!(url)
-  say "  Extracting links..."
-  doc = Nokogiri::HTML open url
-  links = doc.css('a')
-  links = normalize_links links
-  @store.transaction { @store[url] = links }
+  say "!txtblu!#{'Crawl!'.rjust 10}!txtrst! Extracting links... "
+
+  begin
+    doc = Nokogiri::HTML open url
+    links = doc.css('a')
+    links = normalize_links links
+    @store.transaction { @store[url] = links }
+    say "done"
+  rescue OpenURI::HTTPError => e
+    links = []
+    say "!txtred!ERROR"
+    STDERR.puts "---------> HTTP Error: #{e.message} at #{url}"
+  end
   links
 end
 
