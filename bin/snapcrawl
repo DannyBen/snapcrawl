@@ -3,5 +3,5 @@
 require 'snapcrawl'
 trap(:INT) { abort "\r\nGoodbye" }
 include Snapcrawl
-# BinHandler.new.handle ARGV
+Crawler.instance.handle ARGV
 

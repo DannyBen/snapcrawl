@@ -1,11 +1,15 @@
-require 'ostruct'
+require 'colsole'
+require 'docopt'
 require 'fileutils'
-require 'screencap'
 require 'nokogiri'
 require 'open-uri'
+require 'ostruct'
 require 'pstore'
+require 'screencap'
 
 module Snapcrawl
+  include Colsole
+
   class Crawler
     def self.instance
       @@instance ||= self.new
@@ -17,7 +21,20 @@ module Snapcrawl
       @done       = []
     end
 
-    def crawl(url, opts)
+    def handle(args)
+      begin
+        execute Docopt::docopt(doc, argv: args)
+      rescue Docopt::Exit => e
+        puts e.message
+      end
+    end
+
+    def execute(args)
+      return show_version if args['--version']
+      crawl args['<url>'].dup
+    end
+
+    def crawl(url, opts={})
       defaults = {
         depth: 1,
         age: 86400,
@@ -116,7 +133,7 @@ module Snapcrawl
 
     # Return proper image path for a URL
     def image_path_for(url)
-      "#{@dir}/#{handelize(url)}.png"
+      "#{@opts.dir}/#{handelize(url)}.png"
     end
 
     # Add protocol to a URL if neeed
@@ -126,7 +143,7 @@ module Snapcrawl
 
     # Return true if the file exists and is not too old
     def file_fresh?(file)
-      File.exist?(file) and file_age(file) < @snap_age
+      File.exist?(file) and file_age(file) < @opts.age
     end
 
     # Return file age in seconds
@@ -157,6 +174,19 @@ module Snapcrawl
       links = links.select {|link| link =~ /https?:\/\/#{@base}.*/}
 
       links
+    end
+
+    def show_version
+      puts VERSION
+    end
+
+    def doc
+      return @doc if @doc 
+      @doc = File.read template 'docopt.txt'
+    end
+
+    def template(file)
+      File.expand_path("../templates/#{file}", __FILE__)
     end
   end
 end
