@@ -36,6 +36,8 @@ module Snapcrawl
 
     def crawl(url, opts={})
       defaults = {
+        width: 1280,
+        height: 0,
         depth: 1,
         age: 86400,
         dir: 'snaps',
@@ -84,9 +86,8 @@ module Snapcrawl
       fetch_opts = {}
       fetch_opts[:output] = image_path_for(url)
       fetch_opts[:width]  = @opts.width
-      fetch_opts[:height] = @opts.height if @opts.height
-      # :height => 768,
-      # :div => '.header', # selector for a specific element to take screenshot of
+      fetch_opts[:height] = @opts.height if @opts.height > 0
+      fetch_opts[:div]    = @opts.selector if @opts.selector
       # :top => 0, :left => 0, :width => 100, :height => 100 # dimensions for a specific area
 
       screenshot = f.fetch fetch_opts 
@@ -191,9 +192,14 @@ module Snapcrawl
 
     def opts_from_args(args)
       opts = {}
-      opts[:folder] = args['--folder'] if args['--folder']
-      opts[:age] = args['--age'].to_i if args['--age']
-      opts[:depth] = args['--depth'].to_i if args['--depth']
+      %w[folder selector].each do |opt|
+        opts[opt.to_sym] = args["--#{opt}"] if args["--#{opt}"]
+      end
+
+      %w[age depth width height].each do |opt|
+        opts[opt.to_sym] = args["--#{opt}"].to_i if args["--#{opt}"]
+      end
+
       opts
     end
   end
