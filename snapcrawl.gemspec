@@ -17,7 +17,6 @@ Gem::Specification.new do |s|
   s.required_ruby_version = '>= 2.0'
 
   s.add_runtime_dependency 'colsole', '~> 0.3'
-  s.add_runtime_dependency 'net-ssh', '~> 3.0'
   s.add_runtime_dependency 'docopt', '~> 0.5'
   s.add_runtime_dependency 'nokogiri', '~> 1.6'
   s.add_runtime_dependency 'screencap', '~> 0.1'

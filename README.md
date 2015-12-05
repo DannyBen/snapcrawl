@@ -1,5 +1,10 @@
 # SnapCrawl - crawl a website and take screenshots
 
+[![Gem Version](https://badge.fury.io/rb/snapcrawl.svg)](http://badge.fury.io/rb/snapcrawl)
+[![Code Climate](https://codeclimate.com/github/DannyBen/snapcrawl/badges/gpa.svg)](https://codeclimate.com/github/DannyBen/snapcrawl)
+[![Dependency Status](https://gemnasium.com/DannyBen/snapcrawl.svg)](https://gemnasium.com/DannyBen/snapcrawl)
+
+
 SnapCrawl is a command line utility for crawling a website and saving
 screenshots. 
 
