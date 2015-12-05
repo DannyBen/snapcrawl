@@ -7,3 +7,12 @@ version Snapcrawl::VERSION
 RunGemDev::gem_tasks 'snapcrawl'
 RunGemDev::minitest_tasks
 RunGemDev::rdoc_tasks
+
+help   "Regenerate the command line output in the README file"
+action :patchme do
+  readme = File.read 'README.md'
+  usage  = `bundle exec snapcrawl -h`
+  usage.gsub!(/^/, "    ")
+  readme.gsub!(/(\$ snapcrawl --help)(.*)(---\s*)/m) { "#{$1}\n\n#{usage}\n#{$3}" }
+  File.write "README.md", readme
+end
