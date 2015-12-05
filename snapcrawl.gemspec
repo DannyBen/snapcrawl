@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
   s.version     = Snapcrawl::VERSION
   s.date        = Date.today.to_s
   s.summary     = "Crawl a website and take screenshots (CLI + Library)"
-  s.description = "Snapcrawl is a command line utility and ruby library for crawling a website and saving screenshots."
+  s.description = "Snapcrawl is a command line utility for crawling a website and saving screenshots."
   s.authors     = ["Danny Ben Shitrit"]
   s.email       = 'db@dannyben.com'
   s.files       = Dir['README.md', 'lib/**/*.rb', 'lib/snapcrawl/templates/*']
@@ -24,10 +24,9 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency 'runfile', '~> 0.5'
   s.add_development_dependency 'run-gem-dev', '~> 0.2'
-  s.add_development_dependency 'minitest', '~> 5.8'
-  s.add_development_dependency 'minitest-reporters', '~> 1.1'
-  s.add_development_dependency 'rake', '~> 10.4'
-  s.add_development_dependency 'simplecov', '~> 0.10'
-  s.add_development_dependency 'fakeweb', '~> 1.3'
+  # s.add_development_dependency 'minitest', '~> 5.8'
+  # s.add_development_dependency 'minitest-reporters', '~> 1.1'
+  # s.add_development_dependency 'rake', '~> 10.4'
+  # s.add_development_dependency 'simplecov', '~> 0.10'
 
 end

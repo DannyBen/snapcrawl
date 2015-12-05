@@ -31,7 +31,7 @@ module Snapcrawl
 
     def execute(args)
       return show_version if args['--version']
-      crawl args['<url>'].dup
+      crawl args['<url>'].dup, opts_from_args(args)
     end
 
     def crawl(url, opts={})
@@ -59,7 +59,7 @@ module Snapcrawl
       urls.each do |url|
         next if @done.include? url
         @done << url
-        say "\n!txtgrn!Processing #{url}"
+        say "\n!txtgrn!-----> Visit: #{url}"
         snap url
         new_urls += extract_urls_from url
       end
@@ -70,7 +70,7 @@ module Snapcrawl
     def snap(url)
       file = image_path_for(url)
       if file_fresh? file
-        say "#{'Snap:'.rjust 10} Skipping. File exists and seems fresh"
+        say "       Snap:  Skipping. File exists and seems fresh"
       else
         snap!(url)
       end
@@ -78,7 +78,7 @@ module Snapcrawl
 
     # Take a screenshot of the URL, even if file exists
     def snap!(url)
-      say "!txtblu!#{'Snap!'.rjust 10}!txtrst! Snapping picture... "
+      say "       !txtblu!Snap!!txtrst!  Snapping picture... "
 
       f = Screencap::Fetcher.new url
       fetch_opts = {}
@@ -97,7 +97,7 @@ module Snapcrawl
       cached = nil
       @store.transaction { cached = @store[url] }
       if cached
-        say "#{'Crawl:'.rjust 10} Page was cached. Reading subsequent URLs from cache"
+        say "       Crawl: Page was cached. Reading subsequent URLs from cache"
         return cached
       else
         return extract_urls_from! url
@@ -105,7 +105,7 @@ module Snapcrawl
     end
 
     def extract_urls_from!(url)
-      say "!txtblu!#{'Crawl!'.rjust 10}!txtrst! Extracting links... "
+      say "       !txtblu!Crawl!!txtrst! Extracting links... "
 
       begin
         doc = Nokogiri::HTML open url
@@ -115,8 +115,8 @@ module Snapcrawl
         say "done"
       rescue OpenURI::HTTPError => e
         links = []
-        say "!txtred!ERROR"
-        STDERR.puts "---------> HTTP Error: #{e.message} at #{url}"
+        say "!txtred!FAILED"
+        say! "!txtred!  !    HTTP Error: #{e.message} at #{url}"
       end
       links
     end
@@ -131,7 +131,7 @@ module Snapcrawl
       str.downcase.gsub /[^a-z0-9]+/, '-'
     end
 
-    # Return proper image path for a URL
+    # Return proper image path for a UR
     def image_path_for(url)
       "#{@opts.dir}/#{handelize(url)}.png"
     end
@@ -187,6 +187,14 @@ module Snapcrawl
 
     def template(file)
       File.expand_path("../templates/#{file}", __FILE__)
+    end
+
+    def opts_from_args(args)
+      opts = {}
+      opts[:folder] = args['--folder'] if args['--folder']
+      opts[:age] = args['--age'].to_i if args['--age']
+      opts[:depth] = args['--depth'].to_i if args['--depth']
+      opts
     end
   end
 end

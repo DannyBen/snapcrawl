@@ -6,6 +6,10 @@ Usage:
   snapcrawl -v | --version
 
 Options:
+  -f --folder <path>     Where to save screenshots [default: snaps]
+  -a --age <n>           Number of seconds to consider screenshots fresh
+                         [default: 86400]
+  -d --depth <n>         Number of levels to crawl [default: 1]
   -h --help              Show this screen
   -v --version           Show version
 

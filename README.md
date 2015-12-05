@@ -5,37 +5,19 @@ screenshots. It is using [Runfile](https://github.com/DannyBen/runfile).
 
 ## Features
 
-- Crawl a website to any given depth
-- Save full screenshots of all crawled pages
+- Crawls a website to any given depth and save screenshots
+- Can capture the full length of the page
+- Can use a specific resolution for screenshots
 - Skips capturing if the screenshot was already saved recently
 - Uses local caching to avoid expensive crawl operations if not needed
+- Reports broken links
 
-## Install Gem Dependencies
+## Install
 
-Option 1, with bundler:
-
-	$ bundle
-
-Option 2, manually:
-
-	$ gem install runfile
-	$ gem install nokogiri
-	$ gem install screencap
+	$ gem install snapcrawl
 
 ## Usage
 
-	$ run --help
-
-
-## TODO
-
-- [x] Add snap folder option to command line
-- [x] Add caching options to command line
-- [ ] Add ignore regexes to command line
-- [ ] Add exception handling for when snapping fails
-- [x] Add clear cache option
-- [ ] Maybe add config file to allow persistent options
-
-
+	$ snapcrawl --help
 
 
