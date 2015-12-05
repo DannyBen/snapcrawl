@@ -18,10 +18,10 @@ module Snapcrawl
     def initialize
       @storefile  = "snapcrawl.pstore"
       @store      = PStore.new(@storefile)
-      @done       = []
     end
 
     def handle(args)
+      @done = []
       begin
         execute Docopt::docopt(doc, argv: args)
       rescue Docopt::Exit => e
@@ -33,6 +33,12 @@ module Snapcrawl
       return show_version if args['--version']
       crawl args['<url>'].dup, opts_from_args(args)
     end
+
+    def clear_cache
+      FileUtils.rm @storefile if File.exist? @storefile
+    end
+
+    private
 
     def crawl(url, opts={})
       defaults = {
@@ -53,8 +59,6 @@ module Snapcrawl
         urls = crawl_and_snap urls
       end
     end
-
-    private    
 
     def crawl_and_snap(urls)
       new_urls = []
@@ -148,7 +152,7 @@ module Snapcrawl
 
     # Return true if the file exists and is not too old
     def file_fresh?(file)
-      File.exist?(file) and file_age(file) < @opts.age
+      @opts.age > 0 and File.exist?(file) and file_age(file) < @opts.age
     end
 
     # Return file age in seconds
@@ -173,10 +177,13 @@ module Snapcrawl
       links = links.reject {|link| link =~ /^(#{beginnings})/}
 
       # Add the base domain to relative URLs
-      links = links.map {|link| link =~ /^http/ ? link : "http://#{@base}#{link}"}
+      links = links.map do |link| 
+        link =~ /^http/ ? link : "#{@opts.base}#{link}"
+        link = "http://#{link}" unless link =~ /^http/
+      end
 
       # Keep only links in our base domain
-      links = links.select {|link| link =~ /https?:\/\/#{@base}.*/}
+      links = links.select {|link| link =~ /https?:\/\/#{@opts.base}.*/}
 
       links
     end

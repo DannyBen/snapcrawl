@@ -1,0 +1,39 @@
+require 'runfile-exec'
+
+name    "Sinatra"
+summary "Sinatra Server"
+version "0.1.1"
+
+trap(:TERM) { abort "\nGoodbye"}
+
+usage  "start [--daemon]"
+help   "Start the server"
+option "-d --daemon", "Start as a daemon"
+action :start do |args|
+  if args['--daemon'] 
+    run_as_daemon
+  else
+    run_at_front
+  end
+end
+
+help   "Stop the daemon server"
+action :stop do
+  stop_bg 'sinatra'
+end
+
+def run_as_daemon
+  if File.exist? 'sinatra.pid' 
+    abort "Server may already be running.\nIf it is not, delete the 'sinatra.pid' file."
+  end
+  run_bg 'ruby server.rb', pid: 'sinatra'
+  say "!txtblu!Sinatra started. 'run stop' to stop."
+end
+
+def run_at_front
+  begin
+    run 'ruby server.rb'
+  rescue Interrupt
+    abort "\rBye"
+  end
+end
