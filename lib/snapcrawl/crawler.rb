@@ -162,30 +162,33 @@ module Snapcrawl
 
     # Process an array of links and return a better one
     def normalize_links(links)
-      # Remove the #hash part from all links
-      links = links.map {|link| link.attribute('href').to_s.gsub(/#.+$/, '')}
-
-      # Make unique and remove empties
-      links = links.uniq.reject {|link| link.empty?}
-
-      # Remove links to images and other files
       extensions = "png|gif|jpg|pdf|zip"
-      links = links.reject {|link| link =~ /\.(#{extensions})(\?.*)?$/}
-
-      # Remove mailto, tel links
       beginnings = "mailto|tel"
-      links = links.reject {|link| link =~ /^(#{beginnings})/}
 
-      # Add the base domain to relative URLs
-      links = links.map do |link| 
-        link =~ /^http/ ? link : "#{@opts.base}#{link}"
+      links_array = []
+
+      links.each_with_index do |link|
+        link = link.attribute('href').to_s
+
+        # remove #hash
+        link.gsub!(/#.+$/, '')
+        next if link.empty?
+
+        # Remove links to images and other files then to mailto/tel 
+        next if link =~ /\.(#{extensions})(\?.*)?$/
+        next if link =~ /^(#{beginnings})/
+        
+        # Add the base domain to relative URLs
+        link = link =~ /^http/ ? link : "#{@opts.base}#{link}" 
         link = "http://#{link}" unless link =~ /^http/
+
+        # Keep only links in our base domain
+        next unless link.include? @opts.base
+
+        links_array << link
       end
 
-      # Keep only links in our base domain
-      links = links.select {|link| link =~ /https?:\/\/#{@opts.base}.*/}
-
-      links
+      links_array.uniq
     end
 
     def show_version

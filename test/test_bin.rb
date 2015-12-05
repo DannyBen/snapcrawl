@@ -13,10 +13,15 @@ class TestBin < MiniTest::Test
     @make_fixtures = false
   end
 
-  def test_should_return_usage    
+  def test_should_return_usage
     out, _ = capture []
     make_fixture out, __method__
     assert_equal fixture(__method__), out
+  end
+
+  def test_should_return_version
+    out, _ = capture %W[go #{@base} -v]
+    assert_equal "#{VERSION}\n", out
   end
 
   def test_should_crawl_one_page
