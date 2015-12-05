@@ -5,7 +5,7 @@
 [![Dependency Status](https://gemnasium.com/DannyBen/snapcrawl.svg)](https://gemnasium.com/DannyBen/snapcrawl)
 
 
-SnapCrawl is a command line utility for crawling a website and saving
+Snapcrawl is a command line utility for crawling a website and saving
 screenshots. 
 
 ## Features
@@ -57,7 +57,7 @@ screenshots.
 
 ## Notes
 
-1. If a URL cannot be found, SnapCrawl will report to stderr. 
+1. If a URL cannot be found, Snapcrawl will report to stderr. 
    You can create a report by running `snapcrawl go example.com 2> err.txt`
 
 ## Todo
