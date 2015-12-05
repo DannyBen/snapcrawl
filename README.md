@@ -62,6 +62,7 @@ screenshots.
 
 ## Todo
 
-- [ ] Tests (probably against some ad hoc sinatra)
+- [x] Tests (probably against some ad hoc sinatra)
+- [ ] Make ths test server start/stop automatically when testing
 - [ ] Move ignored file extensions and mailto/tel links to config
 - [ ] Add screen size presets (also to user-overridable config)

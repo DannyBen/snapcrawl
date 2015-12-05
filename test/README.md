@@ -5,7 +5,7 @@ SnapCrawl Tests
 
 	$ cd repo/path
 	$ run test
-	
+
 
 ## The Test Server
 
@@ -35,6 +35,3 @@ need to regenerate fixtures. Thankfully, this is easy - simply set
 
 **Don't fotget to set it back to false**
 
-## Todo
-
-- [ ] Make ths server start/stop automatically when testing
