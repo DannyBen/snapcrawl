@@ -36,6 +36,7 @@ screenshots.
       -H --height <n>        Screen height in pixels. Use 0 to capture the full 
                              page [default: 0]
       -s --selector <s>      CSS selector to capture
+      -o --only <regex>      Include only URLs that match <regex>
       -h --help              Show this screen
       -v --version           Show version
     
@@ -45,6 +46,7 @@ screenshots.
       snapcrawl go example.com -d2 > out.txt 2> err.txt &
       snapcrawl go example.com -W360 -H480
       snapcrawl go example.com --selector "#main-content"
+      snapcrawl go example.com --only "products|collections"
 
 ---
 

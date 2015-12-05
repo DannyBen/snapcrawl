@@ -62,7 +62,11 @@ module Snapcrawl
         next if @done.include? url
         @done << url
         say "\n!txtgrn!-----> Visit: #{url}"
-        snap url
+        if @opts.only and url !~ /#{@opts.only}/
+          say "       Snap:  Skipping. Does not match regex"
+        else
+          snap url
+        end
         new_urls += extract_urls_from url
       end
       new_urls
@@ -192,7 +196,7 @@ module Snapcrawl
 
     def opts_from_args(args)
       opts = {}
-      %w[folder selector].each do |opt|
+      %w[folder selector only].each do |opt|
         opts[opt.to_sym] = args["--#{opt}"] if args["--#{opt}"]
       end
 
