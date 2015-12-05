@@ -94,7 +94,7 @@ module Snapcrawl
       fetch_opts[:div]    = @opts.selector if @opts.selector
       # :top => 0, :left => 0, :width => 100, :height => 100 # dimensions for a specific area
 
-      screenshot = f.fetch fetch_opts 
+      f.fetch fetch_opts 
       say "done"
     end
 
@@ -128,12 +128,12 @@ module Snapcrawl
 
     # mkdir the screenshots folder, if needed
     def make_screenshot_dir(dir)
-      Dir.exists? dir or FileUtils.mkdir_p dir
+      Dir.exist? dir or FileUtils.mkdir_p dir
     end
 
     # Convert any string to a proper handle
     def handelize(str)
-      str.downcase.gsub /[^a-z0-9]+/, '-'
+      str.downcase.gsub(/[^a-z0-9]+/, '-')
     end
 
     # Return proper image path for a UR
