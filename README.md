@@ -54,3 +54,9 @@ screenshots.
 
 1. If a URL cannot be found, SnapCrawl will report to stderr. 
    You can create a report by running `snapcrawl go example.com 2> err.txt`
+
+## Todo
+
+- [ ] Tests (probably against some ad hoc sinatra)
+- [ ] Move ignored file extensions and mailto/tel links to config
+- [ ] Add screen size presets (also to user-overridable config)
