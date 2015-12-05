@@ -1,4 +1,4 @@
-# SnapCrawl - crawl a website and take screenshots
+# Snapcrawl - crawl a website and take screenshots
 
 [![Gem Version](https://badge.fury.io/rb/snapcrawl.svg)](http://badge.fury.io/rb/snapcrawl)
 [![Code Climate](https://codeclimate.com/github/DannyBen/snapcrawl/badges/gpa.svg)](https://codeclimate.com/github/DannyBen/snapcrawl)
