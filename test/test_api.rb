@@ -3,13 +3,12 @@ require_relative '../lib/snapcrawl'
 include Snapcrawl
 
 class TestApi < MiniTest::Test
-  def setup
-    @base = "http://example.com"
-  end
+  # def setup
+  #   @base = "http://example.com"
+  # end
 
-  def test_crawl
-    output = crawl "#{@base}/test"
-    p output; exit
-  end
-
+  # def test_crawl
+  #   output = crawl "#{@base}/test"
+  #   p output; exit
+  # end
 end
