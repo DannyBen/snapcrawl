@@ -170,11 +170,11 @@ module Snapcrawl
       links.each_with_index do |link|
         link = link.attribute('href').to_s
 
-        # remove #hash
+        # Remove #hash
         link.gsub!(/#.+$/, '')
         next if link.empty?
 
-        # Remove links to images and other files then to mailto/tel 
+        # Remove links to specific extensions and protocols
         next if link =~ /\.(#{extensions})(\?.*)?$/
         next if link =~ /^(#{beginnings})/
         
@@ -196,8 +196,7 @@ module Snapcrawl
     end
 
     def doc
-      return @doc if @doc 
-      @doc = File.read template 'docopt.txt'
+      @doc ||= File.read template 'docopt.txt'
     end
 
     def template(file)
