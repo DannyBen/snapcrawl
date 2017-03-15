@@ -1,14 +1,18 @@
-# Snapcrawl - crawl a website and take screenshots
+Snapcrawl - crawl a website and take screenshots
+==================================================
 
 [![Gem Version](https://badge.fury.io/rb/snapcrawl.svg)](http://badge.fury.io/rb/snapcrawl)
 [![Code Climate](https://codeclimate.com/github/DannyBen/snapcrawl/badges/gpa.svg)](https://codeclimate.com/github/DannyBen/snapcrawl)
 [![Dependency Status](https://gemnasium.com/DannyBen/snapcrawl.svg)](https://gemnasium.com/DannyBen/snapcrawl)
 
+---
 
 Snapcrawl is a command line utility for crawling a website and saving
 screenshots. 
 
-## Features
+
+Features
+--------------------------------------------------
 
 - Crawls a website to any given depth and save screenshots
 - Can capture the full length of the page
@@ -17,11 +21,15 @@ screenshots.
 - Uses local caching to avoid expensive crawl operations if not needed
 - Reports broken links
 
-## Install
+
+Install
+--------------------------------------------------
 
 	$ gem install snapcrawl
 
-## Usage
+
+Usage
+--------------------------------------------------
 
 	$ snapcrawl --help
 
@@ -55,14 +63,17 @@ screenshots.
 
 ---
 
-## Notes
+Notes
+--------------------------------------------------
 
 1. If a URL cannot be found, Snapcrawl will report to stderr. 
    You can create a report by running `snapcrawl go example.com 2> err.txt`
 
-## Todo
+
+Todo
+--------------------------------------------------
 
 - [x] Tests (probably against some ad hoc sinatra)
-- [ ] Make ths test server start/stop automatically when testing
+- [ ] Make the test server start/stop automatically when testing
 - [ ] Move ignored file extensions and mailto/tel links to config
 - [ ] Add screen size presets (also to user-overridable config)

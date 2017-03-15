@@ -1,5 +1,6 @@
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
+require 'date'
 require 'snapcrawl/version'
 
 Gem::Specification.new do |s|
@@ -20,6 +21,12 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency 'docopt', '~> 0.5'
   s.add_runtime_dependency 'nokogiri', '~> 1.6'
   s.add_runtime_dependency 'screencap', '~> 0.1'
+  
+  # Normally, we do not need to specify phantomjs as a dependency
+  # since screencap is bringing it. However, screencap does not seem
+  # to work with version 2.x, so we limit it here.
+  # See: https://github.com/maxwell/screencap/issues/31
+  s.add_runtime_dependency 'phantomjs', '~> 1.9.8', "<2.0"
 
   s.add_development_dependency 'runfile', '~> 0.5'
   s.add_development_dependency 'run-gem-dev', '~> 0.2'
