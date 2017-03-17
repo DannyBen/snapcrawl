@@ -1,7 +1,7 @@
-require_relative 'helpers'
+require_relative 'test_helper'
 require 'snapcrawl'
 
-class TestBin < MiniTest::Test
+class BinTest < MiniTest::Test
   include Snapcrawl
 
   def setup
