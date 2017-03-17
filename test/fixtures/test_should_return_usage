@@ -1,4 +1,0 @@
-Usage:
-  snapcrawl go <url> [options]
-  snapcrawl -h | --help 
-  snapcrawl -v | --version

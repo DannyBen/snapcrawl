@@ -1,12 +1,12 @@
-require "run-gem-dev"
+require "runfile-tasks"
 
 name    "Snapcrawl Runfile"
 summary "Runfile tasks for building the Snapcrawl gem"
 version Snapcrawl::VERSION
 
-RunGemDev::gem_tasks 'snapcrawl'
-RunGemDev::minitest_tasks
-RunGemDev::rdoc_tasks
+RunfileTasks::RubyGems.all 'snapcrawl'
+RunfileTasks::Testing.rspec
+RunfileTasks::Docs.rdoc
 
 help   "Regenerate the command line output in the README file"
 action :patchme do
@@ -15,4 +15,47 @@ action :patchme do
   usage.gsub!(/^/, "    ")
   readme.gsub!(/(\$ snapcrawl --help)(.*)(---\s*)/m) { "#{$1}\n\n#{usage}\n#{$3}" }
   File.write "README.md", readme
+end
+
+command :server
+
+usage  "start [--daemon]"
+help   "Start the server"
+option "-d --daemon", "Start server in the background"
+action :start do |args|
+  if args['--daemon'] 
+    run_as_daemon
+  else
+    run_at_front
+  end
+end
+
+help   "Stop the daemon server"
+action :stop do
+  Dir.chdir 'spec/server' do 
+    stop_bg 'sinatra'
+  end
+end
+
+endcommand
+
+def run_as_daemon
+  Dir.chdir 'spec/server' do 
+    if File.exist? 'sinatra.pid' 
+      abort "Server may already be running.\nIf it is not, delete the 'sinatra.pid' file."
+    end
+
+    run_bg 'ruby server.rb', pid: 'sinatra'
+  end
+  say "!txtblu!Sinatra started. 'run stop' to stop."
+end
+
+def run_at_front
+  begin
+    Dir.chdir 'spec/server' do
+      run 'ruby server.rb'
+    end
+  rescue Interrupt
+    abort "\rBye"
+  end
 end
