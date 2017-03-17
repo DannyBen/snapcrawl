@@ -7,11 +7,20 @@ Bundler.require :default, :development
 
 include Snapcrawl
 
-def fixture(filename, data=nil)
-  if data
-    File.write "spec/fixtures/#{filename}", data
-    raise "Warning: Fixture data was written.\nThis is perfectly fine if it was intended,\nbut tests cannot proceed with it as a precaution."
-  else
-    File.read "spec/fixtures/#{filename}"
+module SpecHelper
+  def capture_io(&block)
+    begin
+      $stdout, $stderr = StringIO.new, StringIO.new
+      yield
+      result = [$stdout.string, $stderr.string]
+    ensure
+      $stdout, $stderr = STDOUT, STDERR
+    end
+    result
   end
+end
+
+RSpec.configure do |config|
+  config.extend SpecHelper
+  config.include SpecHelper
 end
