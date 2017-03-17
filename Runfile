@@ -1,12 +1,12 @@
-require "run-gem-dev"
+require "runfile-tasks"
 
 name    "Snapcrawl Runfile"
 summary "Runfile tasks for building the Snapcrawl gem"
 version Snapcrawl::VERSION
 
-RunGemDev::gem_tasks 'snapcrawl'
-RunGemDev::minitest_tasks
-RunGemDev::rdoc_tasks
+RunfileTasks::RubyGems.all 'snapcrawl'
+RunfileTasks::Testing.rspec
+RunfileTasks::Docs.rdoc
 
 help   "Regenerate the command line output in the README file"
 action :patchme do
@@ -32,7 +32,7 @@ end
 
 help   "Stop the daemon server"
 action :stop do
-  Dir.chdir 'test/server' do 
+  Dir.chdir 'spec/server' do 
     stop_bg 'sinatra'
   end
 end
@@ -40,7 +40,7 @@ end
 endcommand
 
 def run_as_daemon
-  Dir.chdir 'test/server' do 
+  Dir.chdir 'spec/server' do 
     if File.exist? 'sinatra.pid' 
       abort "Server may already be running.\nIf it is not, delete the 'sinatra.pid' file."
     end
@@ -52,7 +52,7 @@ end
 
 def run_at_front
   begin
-    Dir.chdir 'test/server' do
+    Dir.chdir 'spec/server' do
       run 'ruby server.rb'
     end
   rescue Interrupt

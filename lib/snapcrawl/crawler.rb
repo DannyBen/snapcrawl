@@ -125,7 +125,7 @@ module Snapcrawl
       rescue OpenURI::HTTPError => e
         links = []
         say "!txtred!FAILED"
-        say! "!txtred!  !    HTTP Error: #{e.message} at #{url}"
+        say "!txtred!  !    HTTP Error: #{e.message} at #{url}"
       end
       links
     end
