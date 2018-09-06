@@ -1,6 +1,6 @@
 require "runfile-tasks"
 
-name    "Snapcrawl Runfile"
+title   "Snapcrawl Runfile"
 summary "Runfile tasks for building the Snapcrawl gem"
 version Snapcrawl::VERSION
 
