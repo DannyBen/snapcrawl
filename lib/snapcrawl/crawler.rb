@@ -91,7 +91,15 @@ module Snapcrawl
       say "       !txtblu!Snap!!txtrst!  Snapping picture... "
       image_path = image_path_for url
 
-      fetch_opts = @opts.selector ? { selector: @opts.selector, full: false } : {}
+      fetch_opts = { allowed_status_codes: [404, 401, 403] }
+      if @opts.selector
+        fetch_opts[:selector] = @opts.selector
+        fetch_opts[:full] = false
+      end
+
+      # The webshot gem messes with stdout/stderr streams so we keep it in 
+      # check
+      $keep_stdout, $keep_stderr = $stdout, $stderr
 
       webshot.capture url, image_path, fetch_opts do |magick|
         magick.combine_options do |c|
@@ -101,6 +109,8 @@ module Snapcrawl
           c.extent @opts.height > 0 ? "#{@opts.width}x#{@opts.height}" : "#{@opts.width}x"
         end
       end
+
+      $stdout, $stderr = $keep_stdout, $keep_stderr
 
       say "done"
     end

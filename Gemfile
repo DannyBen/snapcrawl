@@ -10,4 +10,5 @@ group :development, :test do
   gem 'rspec'
   gem 'simplecov'
   gem 'byebug'
+  gem 'rspec_fixtures'
 end
