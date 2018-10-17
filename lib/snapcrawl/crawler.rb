@@ -5,7 +5,7 @@ require 'nokogiri'
 require 'open-uri'
 require 'ostruct'
 require 'pstore'
-require 'screencap'
+require 'webshot'
 
 module Snapcrawl
   include Colsole
@@ -89,16 +89,19 @@ module Snapcrawl
     # Take a screenshot of the URL, even if file exists
     def snap!(url)
       say "       !txtblu!Snap!!txtrst!  Snapping picture... "
+      image_path = image_path_for url
 
-      f = Screencap::Fetcher.new url
-      fetch_opts = {}
-      fetch_opts[:output] = image_path_for(url)
-      fetch_opts[:width]  = @opts.width
-      fetch_opts[:height] = @opts.height if @opts.height > 0
-      fetch_opts[:div]    = @opts.selector if @opts.selector
-      # :top => 0, :left => 0, :width => 100, :height => 100 # dimensions for a specific area
+      fetch_opts = @opts.selector ? { selector: @opts.selector, full: false } : {}
 
-      f.fetch fetch_opts 
+      webshot.capture url, image_path, fetch_opts do |magick|
+        magick.combine_options do |c|
+          c.background "white"
+          c.gravity 'north'
+          c.quality 100
+          c.extent @opts.height > 0 ? "#{@opts.width}x#{@opts.height}" : "#{@opts.width}x"
+        end
+      end
+
       say "done"
     end
 
@@ -214,6 +217,10 @@ module Snapcrawl
       end
 
       opts
+    end
+
+    def webshot
+      Webshot::Screenshot.instance
     end
   end
 end
