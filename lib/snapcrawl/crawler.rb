@@ -5,10 +5,12 @@ require 'nokogiri'
 require 'open-uri'
 require 'ostruct'
 require 'pstore'
-require 'screencap'
+require 'webshot'
 
 module Snapcrawl
   include Colsole
+
+  class MissingPhantomJS < StandardError; end
 
   class Crawler
     def self.instance
@@ -23,14 +25,14 @@ module Snapcrawl
     def handle(args)
       @done = []
       begin
-        execute Docopt::docopt(doc, argv: args)
+        execute Docopt::docopt(doc, version: VERSION, argv: args)
       rescue Docopt::Exit => e
         puts e.message
       end
     end
 
     def execute(args)
-      return show_version if args['--version']
+      raise MissingPhantomJS unless command_exist? "phantomjs"
       crawl args['<url>'].dup, opts_from_args(args)
     end
 
@@ -89,16 +91,25 @@ module Snapcrawl
     # Take a screenshot of the URL, even if file exists
     def snap!(url)
       say "       !txtblu!Snap!!txtrst!  Snapping picture... "
+      image_path = image_path_for url
 
-      f = Screencap::Fetcher.new url
-      fetch_opts = {}
-      fetch_opts[:output] = image_path_for(url)
-      fetch_opts[:width]  = @opts.width
-      fetch_opts[:height] = @opts.height if @opts.height > 0
-      fetch_opts[:div]    = @opts.selector if @opts.selector
-      # :top => 0, :left => 0, :width => 100, :height => 100 # dimensions for a specific area
+      fetch_opts = { allowed_status_codes: [404, 401, 403] }
+      if @opts.selector
+        fetch_opts[:selector] = @opts.selector
+        fetch_opts[:full] = false
+      end
 
-      f.fetch fetch_opts 
+      hide_output do
+        webshot.capture url, image_path, fetch_opts do |magick|
+          magick.combine_options do |c|
+            c.background "white"
+            c.gravity 'north'
+            c.quality 100
+            c.extent @opts.height > 0 ? "#{@opts.width}x#{@opts.height}" : "#{@opts.width}x"
+          end
+        end
+      end      
+
       say "done"
     end
 
@@ -191,10 +202,6 @@ module Snapcrawl
       links_array.uniq
     end
 
-    def show_version
-      puts VERSION
-    end
-
     def doc
       @doc ||= File.read template 'docopt.txt'
     end
@@ -214,6 +221,21 @@ module Snapcrawl
       end
 
       opts
+    end
+
+    def webshot
+      Webshot::Screenshot.instance
+    end
+
+    # The webshot gem messes with stdout/stderr streams so we keep it in 
+    # check by using this method. Also, in some sites (e.g. uown.co) it
+    # prints some output to stdout, this is why we override $stdout for
+    # the duration of the run.
+    def hide_output
+      $keep_stdout, $keep_stderr = $stdout, $stderr
+      $stdout, $stderr = StringIO.new, StringIO.new
+      yield
+      $stdout, $stderr = $keep_stdout, $keep_stderr
     end
   end
 end

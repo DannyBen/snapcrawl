@@ -1,4 +1,5 @@
 require 'simplecov'
+
 SimpleCov.start
 
 require 'rubygems'
@@ -8,15 +9,12 @@ Bundler.require :default, :development
 include Snapcrawl
 
 module SpecHelper
-  def capture_io(&block)
-    begin
-      $stdout, $stderr = StringIO.new, StringIO.new
-      yield
-      result = [$stdout.string, $stderr.string]
-    ensure
-      $stdout, $stderr = STDOUT, STDERR
-    end
-    result
+  def supress_output
+    original_stdout = $stdout
+    $stdout = StringIO.new
+    yield
+  ensure
+    $stdout = original_stdout
   end
 end
 
