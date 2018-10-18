@@ -3,5 +3,16 @@
 require 'snapcrawl'
 trap(:INT) { abort "\r\nGoodbye" }
 include Snapcrawl
-Crawler.instance.handle ARGV
+
+begin
+  Crawler.instance.handle ARGV
+rescue MissingPhantomJS => e
+  message = "Cannot find phantomjs executable in the path, please install it first."
+  say! "\n\n!undred!#{e.class}!txtrst!\n#{message}"
+  exit 2
+rescue => e
+  puts e.backtrace.reverse if ENV['DEBUG']
+  say! "\n\n!undred!#{e.class}!txtrst!\n#{e.message}"
+  exit 1
+end
 

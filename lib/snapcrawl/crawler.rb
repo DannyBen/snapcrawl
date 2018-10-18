@@ -10,6 +10,8 @@ require 'webshot'
 module Snapcrawl
   include Colsole
 
+  class MissingPhantomJS < StandardError; end
+
   class Crawler
     def self.instance
       @@instance ||= self.new
@@ -23,14 +25,14 @@ module Snapcrawl
     def handle(args)
       @done = []
       begin
-        execute Docopt::docopt(doc, argv: args)
+        execute Docopt::docopt(doc, version: VERSION, argv: args)
       rescue Docopt::Exit => e
         puts e.message
       end
     end
 
     def execute(args)
-      return show_version if args['--version']
+      raise MissingPhantomJS unless command_exist? "phantomjs"
       crawl args['<url>'].dup, opts_from_args(args)
     end
 
@@ -202,10 +204,6 @@ module Snapcrawl
       end
 
       links_array.uniq
-    end
-
-    def show_version
-      puts VERSION
     end
 
     def doc
