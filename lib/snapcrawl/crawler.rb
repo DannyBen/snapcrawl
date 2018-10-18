@@ -99,20 +99,16 @@ module Snapcrawl
         fetch_opts[:full] = false
       end
 
-      # The webshot gem messes with stdout/stderr streams so we keep it in 
-      # check
-      $keep_stdout, $keep_stderr = $stdout, $stderr
-
-      webshot.capture url, image_path, fetch_opts do |magick|
-        magick.combine_options do |c|
-          c.background "white"
-          c.gravity 'north'
-          c.quality 100
-          c.extent @opts.height > 0 ? "#{@opts.width}x#{@opts.height}" : "#{@opts.width}x"
+      hide_output do
+        webshot.capture url, image_path, fetch_opts do |magick|
+          magick.combine_options do |c|
+            c.background "white"
+            c.gravity 'north'
+            c.quality 100
+            c.extent @opts.height > 0 ? "#{@opts.width}x#{@opts.height}" : "#{@opts.width}x"
+          end
         end
-      end
-
-      $stdout, $stderr = $keep_stdout, $keep_stderr
+      end      
 
       say "done"
     end
@@ -229,6 +225,17 @@ module Snapcrawl
 
     def webshot
       Webshot::Screenshot.instance
+    end
+
+    # The webshot gem messes with stdout/stderr streams so we keep it in 
+    # check by using this method. Also, in some sites (e.g. uown.co) it
+    # prints some output to stdout, this is why we override $stdout for
+    # the duration of the run.
+    def hide_output
+      $keep_stdout, $keep_stderr = $stdout, $stderr
+      $stdout, $stderr = StringIO.new, StringIO.new
+      yield
+      $stdout, $stderr = $keep_stdout, $keep_stderr
     end
   end
 end
