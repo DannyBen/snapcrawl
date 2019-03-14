@@ -11,6 +11,7 @@ module Snapcrawl
   include Colsole
 
   class MissingPhantomJS < StandardError; end
+  class MissingImageMagick < StandardError; end
 
   class Crawler
     def self.instance
@@ -33,6 +34,7 @@ module Snapcrawl
 
     def execute(args)
       raise MissingPhantomJS unless command_exist? "phantomjs"
+      raise MissingImageMagick unless command_exist? "convert"
       crawl args['<url>'].dup, opts_from_args(args)
     end
 
@@ -235,6 +237,7 @@ module Snapcrawl
       $keep_stdout, $keep_stderr = $stdout, $stderr
       $stdout, $stderr = StringIO.new, StringIO.new
       yield
+    ensure
       $stdout, $stderr = $keep_stdout, $keep_stderr
     end
   end

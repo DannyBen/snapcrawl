@@ -21,6 +21,12 @@ Features
 - Reports broken links
 
 
+Prerequisites
+--------------------------------------------------
+
+Snapcrawl requires [PhantomJS][1] and [ImageMagick][2].
+
+
 Install
 --------------------------------------------------
 
@@ -68,3 +74,9 @@ Notes
 1. If a URL cannot be found, Snapcrawl will report to stderr. 
    You can create a report by running `snapcrawl go example.com 2> err.txt`
 
+
+
+---
+
+[1]: http://phantomjs.org/download.html
+[2]: https://imagemagick.org/script/download.php
