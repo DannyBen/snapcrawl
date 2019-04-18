@@ -94,4 +94,4 @@ You can create a report by running `snapcrawl go example.com 2> err.txt`
 
 [1]: http://phantomjs.org/download.html
 [2]: https://imagemagick.org/script/download.php
-[3]: https://hub.docker.com/r/dannyben/snapcrawl
+[3]: https://github.com/DannyBen/docker-snapcrawl
