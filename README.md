@@ -86,7 +86,9 @@ Notes
 --------------------------------------------------
 
 If a URL cannot be found, Snapcrawl will report to stderr. 
-You can create a report by running `snapcrawl go example.com 2> err.txt`
+You can create a report by running
+
+    $ snapcrawl go example.com 2> err.txt
 
 
 
