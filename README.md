@@ -30,7 +30,8 @@ Snapcrawl requires [PhantomJS][1] and [ImageMagick][2].
 Docker Image
 --------------------------------------------------
 
-You can run Snapcrawl by using this docker image:
+You can run Snapcrawl by using this docker image (which contains all the
+necessary prerequisites):
 
     $ docker pull dannyben/snapcrawl
 
