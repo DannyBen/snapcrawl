@@ -50,14 +50,14 @@ module Snapcrawl
         height: 0,
         depth: 1,
         age: 86400,
-        dir: 'snaps',
+        folder: 'snaps',
         base: url, 
       }
       urls = [protocolize(url)]
 
       @opts = OpenStruct.new defaults.merge(opts)
 
-      make_screenshot_dir @opts.dir
+      make_screenshot_dir @opts.folder
 
       @opts.depth.times do 
         urls = crawl_and_snap urls
@@ -155,7 +155,7 @@ module Snapcrawl
 
     # Return proper image path for a UR
     def image_path_for(url)
-      "#{@opts.dir}/#{handelize(url)}.png"
+      "#{@opts.folder}/#{handelize(url)}.png"
     end
 
     # Add protocol to a URL if neeed
