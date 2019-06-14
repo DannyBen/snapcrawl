@@ -9,7 +9,7 @@ describe Crawler do
       subject.clear_cache
     end
 
-    it "shows usage", :focus do
+    it "shows usage" do
       expect{ subject.handle [] }.to output(/Usage/).to_stdout
     end
 
@@ -37,6 +37,44 @@ describe Crawler do
       it "does not resnap" do
         supress_output { subject.handle %W[go #{url} -a0] }
         expect{ subject.handle %W[go #{url}] }.to output_fixture('crawler/resnap')
+      end
+    end
+
+    context "with --folder" do
+      before do
+        system 'rm -rf tmp' if Dir.exist? 'tmp'
+        expect(Dir).not_to exist './tmp'
+      end
+
+      after do
+        system 'rm -rf tmp' if Dir.exist? 'tmp'
+      end
+
+      it "saves images in the requested folder" do
+        supress_output { subject.handle %W[go #{url} --folder tmp] }
+        expect(File).to exist 'tmp/http-localhost-4567.png'
+      end
+    end
+
+    context "with --name" do
+      it "uses the provided filename template" do
+        supress_output { subject.handle %W[go #{url} --name it-works-%{url}] }
+        expect(File).to exist 'snaps/it-works-http-localhost-4567.png'
+      end
+    end
+
+    context "with --selector" do
+      before do
+        system 'rm snaps/selector*.png > /dev/null 2>&1'
+        supress_output { subject.handle %W[go #{url}/selector --name selector-full] }
+      end
+
+      it "only captures a portion of the page" do
+        supress_output { subject.handle %W[go #{url}/selector --name selector-partial --selector .select-me] }
+        full_image_size = File.size('snaps/selector-full.png')
+        selector_image_size = File.size('snaps/selector-partial.png')
+
+        expect(selector_image_size).to be < full_image_size
       end
     end
 
