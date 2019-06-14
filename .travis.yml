@@ -5,7 +5,7 @@ rvm:
 - "2.6.3"
 
 before_script:
-- bundle exec run server start --daemon
+- run server start --daemon
 
 before_install:
 - gem install bundler
