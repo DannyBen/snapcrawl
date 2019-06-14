@@ -35,7 +35,7 @@ module Snapcrawl
     def execute(args)
       raise MissingPhantomJS unless command_exist? "phantomjs"
       raise MissingImageMagick unless command_exist? "convert"
-      crawl args['<url>'].dup, opts_from_args(args)
+      crawl args['URL'].dup, opts_from_args(args)
     end
 
     def clear_cache
@@ -51,7 +51,8 @@ module Snapcrawl
         depth: 1,
         age: 86400,
         folder: 'snaps',
-        base: url, 
+        name: '%{url}',
+        base: url,
       }
       urls = [protocolize(url)]
 
@@ -155,7 +156,7 @@ module Snapcrawl
 
     # Return proper image path for a UR
     def image_path_for(url)
-      "#{@opts.folder}/#{handelize(url)}.png"
+      "#{@opts.folder}/#{@opts.name}.png" % { url: handelize(url) }
     end
 
     # Add protocol to a URL if neeed
@@ -214,7 +215,7 @@ module Snapcrawl
 
     def opts_from_args(args)
       opts = {}
-      %w[folder selector only].each do |opt|
+      %w[folder name selector only].each do |opt|
         opts[opt.to_sym] = args["--#{opt}"] if args["--#{opt}"]
       end
 
