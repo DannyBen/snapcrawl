@@ -57,22 +57,41 @@ Usage
     Snapcrawl
     
     Usage:
-      snapcrawl go <url> [options]
+      snapcrawl go URL [options]
       snapcrawl -h | --help 
       snapcrawl -v | --version
     
     Options:
-      -f --folder <path>     Where to save screenshots [default: snaps]
-      -a --age <n>           Number of seconds to consider screenshots fresh
-                             [default: 86400]
-      -d --depth <n>         Number of levels to crawl [default: 1]
-      -W --width <n>         Screen width in pixels [default: 1280]
-      -H --height <n>        Screen height in pixels. Use 0 to capture the full 
-                             page [default: 0]
-      -s --selector <s>      CSS selector to capture
-      -o --only <regex>      Include only URLs that match <regex>
-      -h --help              Show this screen
-      -v --version           Show version
+      -f, --folder PATH
+        Where to save screenshots [default: snaps]
+    
+      -n, --name TEMPLATE
+        Filename template. Include the string '%{url}' anywhere in the name to 
+        use the captured URL in the filename [default: %{url}]
+    
+      -a, --age SECONDS
+        Number of seconds to consider screenshots fresh [default: 86400]
+    
+      -d, --depth LEVELS
+        Number of levels to crawl [default: 1]
+    
+      -W, --width PIXELS
+        Screen width in pixels [default: 1280]
+    
+      -H, --height PIXELS
+        Screen height in pixels. Use 0 to capture the full page [default: 0]
+    
+      -s, --selector SELECTOR
+        CSS selector to capture
+    
+      -o, --only REGEX
+        Include only URLs that match REGEX
+    
+      -h, --help
+        Show this screen
+    
+      -v, --version
+        Show version number
     
     Examples:
       snapcrawl go example.com
@@ -81,18 +100,8 @@ Usage
       snapcrawl go example.com -W360 -H480
       snapcrawl go example.com --selector "#main-content"
       snapcrawl go example.com --only "products|collections"
-
----
-
-Notes
---------------------------------------------------
-
-If a URL cannot be found, Snapcrawl will report to stderr. 
-You can create a report by running
-
-    $ snapcrawl go example.com 2> err.txt
-
-
+      snapcrawl go example.com --name "screenshot-%{url}"
+      snapcrawl go example.com --name "`date +%Y%m%d`_%{url}"
 
 ---
 
