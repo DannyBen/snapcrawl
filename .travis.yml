@@ -1,0 +1,14 @@
+language: ruby
+cache: bundler
+
+rvm:
+- "2.6.3"
+
+before_script:
+- bundle exec run server start --daemon
+
+before_install:
+- gem install bundler
+
+script:
+- bundle exec rspec
