@@ -21,7 +21,7 @@ describe Crawler do
       expect{ subject.handle %W[go #{url} -a0] }.to output_fixture('crawler/single')
     end
 
-    context "with a broken page" do
+    context "with a broken page", :focus do
       it "reports a problem and continues past the error" do
         expect{ subject.handle %W[go #{url} -a0 -d5] }.to output_fixture('crawler/broken')
       end
