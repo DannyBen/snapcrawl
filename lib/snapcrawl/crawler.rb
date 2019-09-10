@@ -1,10 +1,11 @@
 require 'colsole'
 require 'docopt'
 require 'fileutils'
+require 'httparty'
 require 'nokogiri'
-require 'open-uri'
 require 'ostruct'
 require 'pstore'
+require 'uri'
 require 'webshot'
 
 module Snapcrawl
@@ -131,15 +132,18 @@ module Snapcrawl
       say "       !txtblu!Crawl!!txtrst! Extracting links... "
 
       begin
-        doc = Nokogiri::HTML open url
-        links = doc.css('a')
-        links = normalize_links links
-        @store.transaction { @store[url] = links }
-        say "done"
-      rescue OpenURI::HTTPError => e
-        links = []
-        say "!txtred!FAILED"
-        say "!txtred!  !    HTTP Error: #{e.message} at #{url}"
+        response = HTTParty.get url
+        if response.success?
+          doc = Nokogiri::HTML response.body
+          links = doc.css('a')
+          links = normalize_links links
+          @store.transaction { @store[url] = links }
+          say "done"
+        else
+          links = []
+          say "!txtred!FAILED"
+          say "!txtred!  !    HTTP Error: #{response.code} #{response.message.strip} at #{url}"
+        end
       end
       links
     end
@@ -181,7 +185,7 @@ module Snapcrawl
 
       links_array = []
 
-      links.each_with_index do |link|
+      links.each do |link|
         link = link.attribute('href').to_s
 
         # Remove #hash
@@ -191,10 +195,12 @@ module Snapcrawl
         # Remove links to specific extensions and protocols
         next if link =~ /\.(#{extensions})(\?.*)?$/
         next if link =~ /^(#{beginnings})/
-        
-        # Add the base domain to relative URLs
-        link = link =~ /^http/ ? link : "#{@opts.base}#{link}" 
-        link = "http://#{link}" unless link =~ /^http/
+
+        # Strip spaces
+        link.strip!
+
+        # Convert relative links to absolute
+        link = URI.join( @opts.base, link ).to_s
 
         # Keep only links in our base domain
         next unless link.include? @opts.base
