@@ -210,8 +210,8 @@ module Snapcrawl
           link = URI.join( @opts.base, link ).to_s
         rescue URI::InvalidURIError
           escaped_link = URI.escape link
-          link = URI.join( @opts.base, escaped_link ).to_s
           warnings << { link: link, message: "Using escaped link: #{escaped_link}" }
+          link = URI.join( @opts.base, escaped_link ).to_s
         rescue => e
           warnings << { link: link, message: "#{e.class} #{e.message}" }
           next
