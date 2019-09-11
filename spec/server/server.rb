@@ -16,8 +16,11 @@ get '/' do
 end
 
 get '/page' do
-  "Some Page with a <a href='/broken'>Broken Link</a><br>" +
-  "And a non broken link to follow <a href='/ok'>OK Link</a>"
+  "Some Page with links:<br>" + 
+  "<a href='/broken'>Broken Link</a><br>" +
+  "<a href='/ok'>Valid Link</a><br>" +
+  "<a href='https://www.example.com/'>External</a><br>" +
+  "<a href='https://www.\u0105.com/'>Unicode</a><br>"
 end
 
 get '/ok' do

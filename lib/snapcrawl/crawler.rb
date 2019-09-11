@@ -46,6 +46,7 @@ module Snapcrawl
     private
 
     def crawl(url, opts={})
+      url = protocolize url
       defaults = {
         width: 1280,
         height: 0,
@@ -55,13 +56,13 @@ module Snapcrawl
         name: '%{url}',
         base: url,
       }
-      urls = [protocolize(url)]
+      urls = [url]
 
       @opts = OpenStruct.new defaults.merge(opts)
 
       make_screenshot_dir @opts.folder
 
-      @opts.depth.times do 
+      @opts.depth.times do
         urls = crawl_and_snap urls
       end
     end
@@ -136,9 +137,13 @@ module Snapcrawl
         if response.success?
           doc = Nokogiri::HTML response.body
           links = doc.css('a')
-          links = normalize_links links
+          links, warnings = normalize_links links
           @store.transaction { @store[url] = links }
           say "done"
+          warnings.each do |warning|
+            say "!txtylw!       Warn:  #{warning[:link]}"
+            say word_wrap "              #{warning[:message]}"
+          end
         else
           links = []
           say "!txtred!FAILED"
@@ -184,6 +189,7 @@ module Snapcrawl
       beginnings = "mailto|tel"
 
       links_array = []
+      warnings = []
 
       links.each do |link|
         link = link.attribute('href').to_s
@@ -200,7 +206,16 @@ module Snapcrawl
         link.strip!
 
         # Convert relative links to absolute
-        link = URI.join( @opts.base, link ).to_s
+        begin
+          link = URI.join( @opts.base, link ).to_s
+        rescue URI::InvalidURIError
+          escaped_link = URI.escape link
+          warnings << { link: link, message: "Using escaped link: #{escaped_link}" }
+          link = URI.join( @opts.base, escaped_link ).to_s
+        rescue => e
+          warnings << { link: link, message: "#{e.class} #{e.message}" }
+          next
+        end
 
         # Keep only links in our base domain
         next unless link.include? @opts.base
@@ -208,7 +223,7 @@ module Snapcrawl
         links_array << link
       end
 
-      links_array.uniq
+      [links_array.uniq, warnings]
     end
 
     def doc
@@ -233,7 +248,7 @@ module Snapcrawl
     end
 
     def webshot
-      Webshot::Screenshot.instance
+      @webshot ||= Webshot::Screenshot.instance
     end
 
     # The webshot gem messes with stdout/stderr streams so we keep it in 
