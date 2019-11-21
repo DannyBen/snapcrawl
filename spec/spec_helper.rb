@@ -8,6 +8,9 @@ Bundler.require :default, :development
 
 include Snapcrawl
 
+# Consistent rspec fixtures output
+ENV['TTY'] = 'on'
+
 module SpecHelper
   def supress_output
     original_stdout = $stdout
