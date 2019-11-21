@@ -14,7 +14,7 @@ screenshots.
 Features
 --------------------------------------------------
 
-- Crawls a website to any given depth and save screenshots
+- Crawls a website to any given depth and saves screenshots
 - Can capture the full length of the page
 - Can use a specific resolution for screenshots
 - Skips capturing if the screenshot was already saved recently
