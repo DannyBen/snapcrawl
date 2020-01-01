@@ -1,7 +1,7 @@
 Snapcrawl
 
 Usage:
-  snapcrawl go URL [options]
+  snapcrawl URL [options]
   snapcrawl -h | --help 
   snapcrawl -v | --version
 
@@ -38,11 +38,11 @@ Options:
     Show version number
 
 Examples:
-  snapcrawl go example.com
-  snapcrawl go example.com -d2 -fscreens
-  snapcrawl go example.com -d2 > out.txt 2> err.txt &
-  snapcrawl go example.com -W360 -H480
-  snapcrawl go example.com --selector "#main-content"
-  snapcrawl go example.com --only "products|collections"
-  snapcrawl go example.com --name "screenshot-%{url}"
-  snapcrawl go example.com --name "`date +%Y%m%d`_%{url}"
+  snapcrawl example.com
+  snapcrawl example.com -d2 -fscreens
+  snapcrawl example.com -d2 > out.txt 2> err.txt &
+  snapcrawl example.com -W360 -H480
+  snapcrawl example.com --selector "#main-content"
+  snapcrawl example.com --only "products|collections"
+  snapcrawl example.com --name "screenshot-%{url}"
+  snapcrawl example.com --name "`date +%Y%m%d`_%{url}"
