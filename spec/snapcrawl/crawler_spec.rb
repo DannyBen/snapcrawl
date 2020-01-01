@@ -18,23 +18,23 @@ describe Crawler do
     end
 
     it "crawls a single page" do
-      expect{ subject.handle %W[go #{url} -a0] }.to output_fixture('crawler/single')
+      expect{ subject.handle %W[#{url} -a0] }.to output_fixture('crawler/single')
     end
 
     it "crawls multiple pages" do
-      expect{ subject.handle %W[go #{url} -a0 -d5] }.to output_fixture('crawler/broken')
+      expect{ subject.handle %W[#{url} -a0 -d5] }.to output_fixture('crawler/broken')
     end
 
     context "with exclude regex" do
       it "works" do
-        expect{ subject.handle %W[go #{url} -a0 -d3 -opage] }.to output_fixture('crawler/regex')
+        expect{ subject.handle %W[#{url} -a0 -d3 -opage] }.to output_fixture('crawler/regex')
       end
     end
 
     context "with a freshly snapped picture" do
       it "does not resnap" do
-        supress_output { subject.handle %W[go #{url} -a0] }
-        expect{ subject.handle %W[go #{url}] }.to output_fixture('crawler/resnap')
+        supress_output { subject.handle %W[#{url} -a0] }
+        expect{ subject.handle %W[#{url}] }.to output_fixture('crawler/resnap')
       end
     end
 
@@ -49,14 +49,14 @@ describe Crawler do
       end
 
       it "saves images in the requested folder" do
-        supress_output { subject.handle %W[go #{url} --folder tmp] }
+        supress_output { subject.handle %W[#{url} --folder tmp] }
         expect(File).to exist 'tmp/http-localhost-4567.png'
       end
     end
 
     context "with --name" do
       it "uses the provided filename template" do
-        supress_output { subject.handle %W[go #{url} --name it-works-%{url}] }
+        supress_output { subject.handle %W[#{url} --name it-works-%{url}] }
         expect(File).to exist 'snaps/it-works-http-localhost-4567.png'
       end
     end
@@ -64,11 +64,11 @@ describe Crawler do
     context "with --selector" do
       before do
         system 'rm snaps/selector*.png > /dev/null 2>&1'
-        supress_output { subject.handle %W[go #{url}/selector --name selector-full] }
+        supress_output { subject.handle %W[#{url}/selector --name selector-full] }
       end
 
       it "only captures a portion of the page" do
-        supress_output { subject.handle %W[go #{url}/selector --name selector-partial --selector .select-me] }
+        supress_output { subject.handle %W[#{url}/selector --name selector-partial --selector .select-me] }
         full_image_size = File.size('snaps/selector-full.png')
         selector_image_size = File.size('snaps/selector-partial.png')
 

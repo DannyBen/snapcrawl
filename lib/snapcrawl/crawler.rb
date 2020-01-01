@@ -15,10 +15,8 @@ module Snapcrawl
   class MissingImageMagick < StandardError; end
 
   class Crawler
-    def self.instance
-      @@instance ||= self.new
-    end
-
+    include Singleton
+    
     def initialize
       @storefile  = "snapcrawl.pstore"
       @store      = PStore.new(@storefile)
@@ -256,11 +254,11 @@ module Snapcrawl
     # prints some output to stdout, this is why we override $stdout for
     # the duration of the run.
     def hide_output
-      $keep_stdout, $keep_stderr = $stdout, $stderr
+      keep_stdout, keep_stderr = $stdout, $stderr
       $stdout, $stderr = StringIO.new, StringIO.new
       yield
     ensure
-      $stdout, $stderr = $keep_stdout, $keep_stderr
+      $stdout, $stderr = keep_stdout, keep_stderr
     end
   end
 end
