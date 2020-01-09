@@ -1,11 +1,8 @@
 require 'sinatra'
-require "sinatra/config_file"
 require "sinatra/reloader" if development?
 
-config_file 'config.yml'
-
-set :port, settings.port
-set :bind, settings.bind
+set :port, 4567
+set :bind, '0.0.0.0'
 
 before do
   @log = params[:log].nil? ? '/dev/null' : params[:log]
@@ -20,7 +17,9 @@ get '/page' do
   "<a href='/broken'>Broken Link</a><br>" +
   "<a href='/ok'>Valid Link</a><br>" +
   "<a href='https://www.example.com/'>External</a><br>" +
-  "<a href='https://www.\u0105.com/'>Unicode</a><br>"
+  "<a href='https://www.\u0105.com/'>Unicode</a><br>" +
+  "<a name='anchor-without-href'>without href</a><br>" +
+  "<a href='#id'>with hash only href</a><br>"
 end
 
 get '/ok' do
