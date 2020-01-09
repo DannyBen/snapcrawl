@@ -218,11 +218,11 @@ module Snapcrawl
     end
 
     def doc
-      @doc ||= File.read template 'docopt.txt'
+      @doc ||= File.read docopt
     end
 
-    def template(file)
-      File.expand_path("../templates/#{file}", __FILE__)
+    def docopt
+      File.expand_path "docopt.txt", __dir__
     end
 
     def opts_from_args(args)
