@@ -193,7 +193,7 @@ module Snapcrawl
         link = link.attribute('href').to_s
 
         # Remove #hash
-        link.gsub!(/#.+$/, '')
+        link = link.gsub(/#.+$/, '')
         next if link.empty?
 
         # Remove links to specific extensions and protocols
