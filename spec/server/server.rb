@@ -18,6 +18,7 @@ get '/page' do
   "<a href='/ok'>Valid Link</a><br>" +
   "<a href='https://www.example.com/'>External</a><br>" +
   "<a href='https://www.\u0105.com/'>Unicode</a><br>" +
+  "<a href='\\problmatic \: link'>problematic link</a><br>" +
   "<a name='anchor-without-href'>without href</a><br>" +
   "<a href='#id'>with hash only href</a><br>"
 end

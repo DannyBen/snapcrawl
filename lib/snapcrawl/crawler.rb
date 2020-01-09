@@ -5,15 +5,11 @@ require 'httparty'
 require 'nokogiri'
 require 'ostruct'
 require 'pstore'
-require 'uri'
 require 'addressable/uri'
 require 'webshot'
 
 module Snapcrawl
   include Colsole
-
-  class MissingPhantomJS < StandardError; end
-  class MissingImageMagick < StandardError; end
 
   class Crawler
     include Singleton
@@ -206,11 +202,7 @@ module Snapcrawl
 
         # Convert relative links to absolute
         begin
-          link = URI.join( @opts.base, link ).to_s.dup
-        rescue URI::InvalidURIError
-          escaped_link = Addressable::URI.encode link
-          warnings << { link: link, message: "Using escaped link: #{escaped_link}" }
-          link = URI.join( @opts.base, escaped_link ).to_s.dup
+          link = Addressable::URI.join( @opts.base, link ).to_s.dup
         rescue => e
           warnings << { link: link, message: "#{e.class} #{e.message}" }
           next
@@ -226,11 +218,11 @@ module Snapcrawl
     end
 
     def doc
-      @doc ||= File.read template 'docopt.txt'
+      @doc ||= File.read docopt
     end
 
-    def template(file)
-      File.expand_path("../templates/#{file}", __FILE__)
+    def docopt
+      File.expand_path "docopt.txt", __dir__
     end
 
     def opts_from_args(args)
