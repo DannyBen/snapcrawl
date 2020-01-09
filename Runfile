@@ -48,7 +48,7 @@ def run_as_daemon
 
     run_bg 'ruby server.rb', pid: 'sinatra'
   end
-  say "!txtblu!Sinatra started. 'run stop' to stop."
+  say "!txtblu!Sinatra started. 'run server stop' to stop."
 end
 
 def run_at_front

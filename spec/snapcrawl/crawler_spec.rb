@@ -38,6 +38,13 @@ describe Crawler do
       end
     end
 
+    context "when relative url conversion fails" do
+      it "shows a graceful warning" do
+        expect(URI).to receive(:join).and_raise(ArgumentError, "Some unknown error")
+        expect{ subject.handle %W[#{url} -a0] }.to output_fixture('crawler/normalize-error')
+      end
+    end
+
     context "with --folder" do
       before do
         system 'rm -rf tmp' if Dir.exist? 'tmp'
