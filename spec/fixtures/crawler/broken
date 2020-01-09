@@ -6,8 +6,6 @@
 [0;32m-----> Visit: http://localhost:4567/page
 [0m       [0;34mSnap![0m  Snapping picture... done
        [0;34mCrawl![0m Extracting links... done
-[0;33m       Warn:  https://www.ą.com/
-[0m              Using escaped link: https://www.%C4%85.com/
 
 [0;32m-----> Visit: http://localhost:4567/broken
 [0m       [0;34mSnap![0m  Snapping picture... done

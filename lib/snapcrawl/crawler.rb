@@ -11,9 +11,6 @@ require 'webshot'
 module Snapcrawl
   include Colsole
 
-  class MissingPhantomJS < StandardError; end
-  class MissingImageMagick < StandardError; end
-
   class Crawler
     include Singleton
     
@@ -206,10 +203,6 @@ module Snapcrawl
         # Convert relative links to absolute
         begin
           link = Addressable::URI.join( @opts.base, link ).to_s.dup
-        rescue Addressable::URI::InvalidURIError
-          escaped_link = Addressable::URI.encode link
-          warnings << { link: link, message: "Using escaped link: #{escaped_link}" }
-          link = Addressable::URI.join( @opts.base, escaped_link ).to_s.dup
         rescue => e
           warnings << { link: link, message: "#{e.class} #{e.message}" }
           next

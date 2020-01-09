@@ -40,7 +40,7 @@ describe Crawler do
 
     context "when relative url conversion fails" do
       it "shows a graceful warning" do
-        expect(URI).to receive(:join).and_raise(ArgumentError, "Some unknown error")
+        expect(Addressable::URI).to receive(:join).and_raise(ArgumentError, "Some unknown error")
         expect{ subject.handle %W[#{url} -a0] }.to output_fixture('crawler/normalize-error')
       end
     end
