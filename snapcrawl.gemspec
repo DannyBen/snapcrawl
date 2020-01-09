@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
   s.description = "Snapcrawl is a command line utility for crawling a website and saving screenshots."
   s.authors     = ["Danny Ben Shitrit"]
   s.email       = 'db@dannyben.com'
-  s.files       = Dir['README.md', 'lib/**/*.rb', 'lib/snapcrawl/templates/*']
+  s.files       = Dir['README.md', 'lib/**/*']
   s.executables = ["snapcrawl"]
   s.homepage    = 'https://github.com/DannyBen/snapcrawl'
   s.license     = 'MIT'
