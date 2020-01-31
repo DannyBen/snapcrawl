@@ -1,8 +1,8 @@
 Snapcrawl - crawl a website and take screenshots
 ==================================================
 
-[![Build Status](https://travis-ci.com/DannyBen/snapcrawl.svg?branch=master)](https://travis-ci.com/DannyBen/snapcrawl)
 [![Gem Version](https://badge.fury.io/rb/snapcrawl.svg)](http://badge.fury.io/rb/snapcrawl)
+[![Build Status](https://github.com/DannyBen/snapcrawl/workflows/Test/badge.svg)](https://github.com/DannyBen/snapcrawl/actions?query=workflow%3ATest)
 [![Code Climate](https://codeclimate.com/github/DannyBen/snapcrawl/badges/gpa.svg)](https://codeclimate.com/github/DannyBen/snapcrawl)
 
 ---
