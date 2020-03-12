@@ -103,16 +103,16 @@ module Snapcrawl
       say "done"
     end
 
-    def webshot_capture(url, image_path, options)
-      webshot_capture! url, image_path, options
+    def webshot_capture(url, image_path, fetch_opts)
+      webshot_capture! url, image_path, fetch_opts
     rescue => e
       say "!txtred!FAILED"
       say "!txtred!  !    #{e.class}: #{e.message.strip}"
     end
 
-    def webshot_capture!(url, image_path, options)
+    def webshot_capture!(url, image_path, fetch_opts)
       hide_output do
-        webshot.capture url, image_path, options do |magick|
+        webshot.capture url, image_path, fetch_opts do |magick|
           magick.combine_options do |c|
             c.background "white"
             c.gravity 'north'
