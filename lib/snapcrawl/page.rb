@@ -9,12 +9,14 @@ module Snapcrawl
     using StringRefinements
 
     attr_reader :url, :depth
+    attr_accessor :logger
 
     EXTENSION_BLACKLIST = "png|gif|jpg|pdf|zip"
     PROTOCOL_BLACKLIST = "mailto|tel"
 
-    def initialize(url, depth: 0)
+    def initialize(url, depth: 0, logger: nil)
       @url, @depth = url.protocolize, depth
+      @logger = logger || Logger.new STDOUT
     end
 
     def http_response
@@ -25,10 +27,6 @@ module Snapcrawl
 
     def valid?
       http_response.success?
-    end
-
-    def warnings
-      @warnings ||= []
     end
 
     def pages
@@ -61,7 +59,6 @@ module Snapcrawl
 
     def normalize_links(links)
       result = []
-      @warnings = nil
 
       links.each do |link|
         valid_link = normalize_link link
@@ -89,7 +86,7 @@ module Snapcrawl
       begin
         link = Addressable::URI.join(url, link).to_s.dup
       rescue => e
-        warnings << { link: link, message: "#{e.class} #{e.message}" }
+        logger.error "#{e.class}: #{e.message} at #{link}"
         return nil
       end
 

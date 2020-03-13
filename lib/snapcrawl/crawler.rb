@@ -1,4 +1,5 @@
 require 'fileutils'
+require 'logger'
 
 module Snapcrawl
   class Crawler
@@ -7,47 +8,43 @@ module Snapcrawl
     attr_reader :url, :name_template, :folder,
       :depth, :width, :height, :selector, :age
 
-    def initialize(url, name_template: nil, folder: nil, depth: nil, 
-      width: nil, height: nil, selector: nil, age: nil, exclude_urls: nil)
+    attr_accessor :logger
+
+    def initialize(url, options = nil)
+      options ||= {}
 
       @url = url
-      @name_template = name_template || '%{url}'
-      @folder = folder || 'snaps'
-      @depth = depth || 0
-      @width = width || 1280
-      @height = height || 0
-      @selector = selector
-      @age = age || 86400
-      @exclude_urls = exclude_urls
+      @logger ||= Logger.new STDOUT
+
+      @name_template = options[:name_template] || '%{url}'
+      @folder = options[:folder] || 'snaps'
+      @depth = options[:depth] || 0
+      @width = options[:width] || 1280
+      @height = options[:height] || 0
+      @selector = options[:selector]
+      @age = options[:age] || 86400
+      @exclude_urls = options[:exclude_urls]
     end
 
-    def crawl(&block)
+    def crawl
       Dependencies.verify
 
       todo[url] = Page.new url
       options = { width: width, height: height, selector: selector }
      
-      process_todo options, &block while todo.any?
+      process_todo options while todo.any?
     end
 
-    def process_todo(options, &block)
+    def process_todo(options)
       url, page = todo.shift
-      yield :start, page: page if block_given?
+      logger.info "processing page: #{page: path}, depth: #{page.depth}"
 
       done.push url
 
-      success = process_page page, options, &block
+      success = process_page page, options
       return unless success
 
       if page.depth < depth
-        warnings = page.warnings
-
-        if warnings and block_given?
-          warnings.each do |warning|
-            yield warning[:link], :warning, warning[:message]
-          end
-        end
-
         register_sub_pages page.pages
       end
     end
@@ -64,19 +61,15 @@ module Snapcrawl
     def process_page(page, options)
       outfile = "#{folder}/#{name_template}.png" % { url: page.url.to_slug }
       if !page.valid?
-        yield :http_error, 
-          page: page, 
-          code: page.http_response.code,
-          message: page.http_response.message.strip
-
+        logger.error "page: #{page.path}, code: #{page.http_response.code}, message: #{page.http_response.message.strip}"
         return false
       end
 
       if file_fresh? outfile
-        yield :cached, page: page if block_given?
+        logger.info "screenshot for #{page.path} already exists"
       else
+        logger.info "capturing screenshot for #{page.path}"
         page.save_screenshot outfile, options
-        yield :snap, page: page if block_given?
       end
 
       true
