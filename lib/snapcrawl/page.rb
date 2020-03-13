@@ -6,17 +6,16 @@ require 'nokogiri'
 
 module Snapcrawl
   class Page
+    include Logging
     using StringRefinements
 
     attr_reader :url, :depth
-    attr_accessor :logger
 
     EXTENSION_BLACKLIST = "png|gif|jpg|pdf|zip"
     PROTOCOL_BLACKLIST = "mailto|tel"
 
     def initialize(url, depth: 0, logger: nil)
       @url, @depth = url.protocolize, depth
-      @logger = logger || Logger.new STDOUT
     end
 
     def http_response
@@ -86,7 +85,7 @@ module Snapcrawl
       begin
         link = Addressable::URI.join(url, link).to_s.dup
       rescue => e
-        logger.error "#{e.class}: #{e.message} at #{link}"
+        logger.warn "#{e.class}: #{e.message} at #{link}"
         return nil
       end
 

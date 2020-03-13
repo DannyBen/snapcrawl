@@ -1,21 +1,17 @@
 require 'fileutils'
-require 'logger'
 
 module Snapcrawl
   class Crawler
+    include Logging
     using StringRefinements
 
     attr_reader :url, :name_template, :folder,
       :depth, :width, :height, :selector, :age
 
-    attr_accessor :logger
-
     def initialize(url, options = nil)
       options ||= {}
 
       @url = url
-      @logger ||= Logger.new STDOUT
-
       @name_template = options[:name_template] || '%{url}'
       @folder = options[:folder] || 'snaps'
       @depth = options[:depth] || 0
@@ -37,7 +33,7 @@ module Snapcrawl
 
     def process_todo(options)
       url, page = todo.shift
-      logger.info "processing page: #{page: path}, depth: #{page.depth}"
+      logger.info "processing page: %{purple}%{underlined}#{page.path}%{reset}, depth: #{page.depth}"
 
       done.push url
 
@@ -61,14 +57,14 @@ module Snapcrawl
     def process_page(page, options)
       outfile = "#{folder}/#{name_template}.png" % { url: page.url.to_slug }
       if !page.valid?
-        logger.error "page: #{page.path}, code: #{page.http_response.code}, message: #{page.http_response.message.strip}"
+        logger.warn "page: #{page.path}, code: #{page.http_response.code}, message: #{page.http_response.message.strip}"
         return false
       end
 
       if file_fresh? outfile
         logger.info "screenshot for #{page.path} already exists"
       else
-        logger.info "capturing screenshot for #{page.path}"
+        logger.info "%{bold}capturing screenshot for #{page.path}%{reset}"
         page.save_screenshot outfile, options
       end
 
