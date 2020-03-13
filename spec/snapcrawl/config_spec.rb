@@ -13,6 +13,15 @@ describe Config do
       subject.load 'spec/fixtures/config/minimal'
       expect(subject.settings.to_yaml).to match_fixture('config/minimal')
     end
+
+    context "when the config file is not found" do
+      before { system 'rm -f tmp/config.yml' }
+
+      it "creates it" do
+        subject.load 'tmp/config.yml'
+        expect(File.read 'tmp/config.yml').to eq File.read('lib/snapcrawl/templates/config.yml')
+      end
+    end
   end
 end
 

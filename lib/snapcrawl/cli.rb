@@ -20,8 +20,10 @@ module Snapcrawl
   private
 
     def execute(args)
-      Config.load args['--config']
-      tweaks = args['TWEAKS'].pair_split
+      status = Config.load args['--config']
+      logger.debug 'config file created' if status == :created
+
+      tweaks = args['SETTINGS'].pair_split
       apply_tweaks tweaks if tweaks
 
       Dependencies.verify
@@ -40,7 +42,7 @@ module Snapcrawl
     end
 
     def docopt_path
-      File.expand_path "docopt.txt", __dir__
+      File.expand_path "templates/docopt.txt", __dir__
     end
 
     def apply_tweaks(tweaks)

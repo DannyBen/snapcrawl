@@ -3,10 +3,7 @@ require 'spec_helper'
 describe 'integration' do
   let(:url) { 'http://localhost:3000' }
   subject { CLI.new }
-  
-  before do
-    @logger = fresh_logger
-  end
+  before { @logger = fresh_logger }
 
   let(:log) { @logger.string }
 
@@ -34,5 +31,13 @@ describe 'integration' do
       subject.call [url, 'log_color=no', 'log_level=1']
       expect(log).to match_fixture('integration/log-color-no')
     end
+  end
+
+  context "with url_whitelist" do
+    
+  end
+  
+  context "with url_blacklist" do
+
   end
 end

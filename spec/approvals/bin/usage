@@ -1,4 +1,4 @@
 Usage:
-  snapcrawl URL [--config FILE] [TWEAKS...]
+  snapcrawl URL [--config FILE] [SETTINGS...]
   snapcrawl -h | --help 
   snapcrawl -v | --version
