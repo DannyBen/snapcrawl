@@ -1,5 +1,6 @@
 require 'colsole'
 require 'docopt'
+require 'fileutils'
 
 module Snapcrawl
   class CLI
@@ -20,7 +21,9 @@ module Snapcrawl
     def execute(args)
       Config.load args['--config']
       Dependencies.verify
+      
       logger.debug 'initializing cli'
+      FileUtils.mkdir_p Config.snaps_dir
 
       url = args['URL'].protocolize
       crawler = Crawler.new url
