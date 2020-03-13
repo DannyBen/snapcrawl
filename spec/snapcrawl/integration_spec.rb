@@ -5,7 +5,6 @@ describe 'integration' do
   subject { CLI.new }
   
   before do
-    Config.load
     @logger = fresh_logger
   end
 
@@ -16,6 +15,24 @@ describe 'integration' do
     expect(log).to match_fixture('integration/default-config')
   end
 
-  context 
+  context "with depth=0" do
+    it "captures the first page only" do
+      subject.call [url, 'depth=0']
+      expect(log).to match_fixture('integration/depth-0')
+    end
+  end
 
+  context "with depth=3 log_level=2" do
+    it "captures 4 levels and shows warnings and above" do
+      subject.call [url, 'depth=3', 'log_level=2']
+      expect(log).to match_fixture('integration/depth-3')
+    end
+  end
+
+  context "with log_color=no" do
+    it "outputs without colors" do
+      subject.call [url, 'log_color=no', 'log_level=1']
+      expect(log).to match_fixture('integration/log-color-no')
+    end
+  end
 end

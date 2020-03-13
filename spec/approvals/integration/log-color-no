@@ -1,0 +1,4 @@
+ INFO : processing http://localhost:3000, depth: 0
+ INFO : screenshot for / already exists
+ INFO : processing http://localhost:3000/page, depth: 1
+ INFO : screenshot for /page already exists

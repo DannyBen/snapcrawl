@@ -1,7 +1,7 @@
 Snapcrawl
 
 Usage:
-  snapcrawl URL [--config FILE]
+  snapcrawl URL [--config FILE] [TWEAKS...]
   snapcrawl -h | --help 
   snapcrawl -v | --version
 
@@ -16,6 +16,10 @@ Options:
   -v, --version
     Show version number
 
+Tweaks:
+  You may provide any of the options available in the config as 'key=value'.
+
 Examples:
   snapcrawl example.com
   snapcrawl example.com --config simple
+  snapcrawl example.com depth=1 log_level=2

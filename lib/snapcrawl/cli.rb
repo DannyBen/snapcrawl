@@ -7,6 +7,7 @@ module Snapcrawl
     include Colsole
     include Logging
     using StringRefinements
+    using PairSplit
     
     def call(args = [])
       begin
@@ -20,6 +21,9 @@ module Snapcrawl
 
     def execute(args)
       Config.load args['--config']
+      tweaks = args['TWEAKS'].pair_split
+      apply_tweaks tweaks if tweaks
+
       Dependencies.verify
       
       logger.debug 'initializing cli'
@@ -37,6 +41,13 @@ module Snapcrawl
 
     def docopt_path
       File.expand_path "docopt.txt", __dir__
+    end
+
+    def apply_tweaks(tweaks)
+      tweaks.each do |key, value|
+        Config.settings[key] = value
+        Config.logger.level = value if key == 'log_level'
+      end
     end
 
   end
