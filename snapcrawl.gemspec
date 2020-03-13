@@ -24,4 +24,5 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency 'httparty', '~> 0.18'
   s.add_runtime_dependency 'addressable', '~> 2.7'
   s.add_runtime_dependency 'lightly', '~> 0.3'
+  s.add_runtime_dependency 'sting', '~> 0.4'
 end

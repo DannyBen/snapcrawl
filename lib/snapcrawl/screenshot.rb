@@ -4,18 +4,18 @@ module Snapcrawl
   class Screenshot
     using StringRefinements
 
-    attr_reader :url, :height, :width, :selector
+    attr_reader :url
 
-    def initialize(url, height: 0, width: 1280, selector: nil)
-      @url, @height, @width, @selector = url, height, width, selector
+    def initialize(url)
+      @url = url
     end
 
     def save(outfile = nil)
       outfile ||= "#{url.to_slug}.png"
 
       fetch_opts = { allowed_status_codes: [404, 401, 403] }
-      if selector
-        fetch_opts[:selector] = selector
+      if Config.selector
+        fetch_opts[:selector] = Config.selector
         fetch_opts[:full] = false
       end
 
@@ -37,7 +37,7 @@ module Snapcrawl
             c.background "white"
             c.gravity 'north'
             c.quality 100
-            c.extent height > 0 ? "#{width}x#{height}" : "#{width}x"
+            c.extent Config.height > 0 ? "#{Config.width}x#{Config.height}" : "#{Config.width}x"
           end
         end
       end

@@ -5,43 +5,27 @@ module Snapcrawl
     include Logging
     using StringRefinements
 
-    attr_reader :url, :name_template, :folder,
-      :depth, :width, :height, :selector, :age
+    attr_reader :url
 
-    def initialize(url, options = nil)
-      options ||= {}
-
+    def initialize(url)
+      logger.debug "initializing crawler with %{green}#{url}%{reset}"
       @url = url
-      @name_template = options[:name_template] || '%{url}'
-      @folder = options[:folder] || 'snaps'
-      @depth = options[:depth] || 0
-      @width = options[:width] || 1280
-      @height = options[:height] || 0
-      @selector = options[:selector]
-      @age = options[:age] || 86400
-      @exclude_urls = options[:exclude_urls]
     end
 
     def crawl
       Dependencies.verify
-
       todo[url] = Page.new url
-      options = { width: width, height: height, selector: selector }
-     
-      process_todo options while todo.any?
+      process_todo while todo.any?
     end
 
-    def process_todo(options)
-      url, page = todo.shift
-      logger.info "processing page: %{purple}%{underlined}#{page.path}%{reset}, depth: #{page.depth}"
+    def process_todo
+      logger.debug "processing todo: %{green}#{todo.count} remaining%{reset}"
 
+      url, page = todo.shift
       done.push url
 
-      success = process_page page, options
-      return unless success
-
-      if page.depth < depth
-        register_sub_pages page.pages
+      if process_page page
+        register_sub_pages page.pages if page.depth < Config.depth
       end
     end
 
@@ -50,14 +34,28 @@ module Snapcrawl
     def register_sub_pages(pages)
       pages.each do |sub_page|
         next if todo.has_key?(sub_page) or done.include?(sub_page)
+        
+        if Config.url_whitelist and sub_page.path !~ /#{Config.url_whitelist}/
+          logger.debug "ignoring %{purple}%{underlined}#{sub_page.url}%{reset}, reason: whitelist"
+          next
+        end
+
+        if Config.url_blacklist and sub_page.path =~ /#{Config.url_blacklist}/
+          logger.debug "ignoring %{purple}%{underlined}#{sub_page.url}%{reset}, reason: blacklist"
+          next
+        end
+
         todo[sub_page.url] = sub_page
       end
     end
 
-    def process_page(page, options)
-      outfile = "#{folder}/#{name_template}.png" % { url: page.url.to_slug }
+    def process_page(page)
+      outfile = "#{Config.snaps_dir}/#{Config.name_template}.png" % { url: page.url.to_slug }
+
+      logger.info "processing %{purple}%{underlined}#{page.url}%{reset}, depth: #{page.depth}"
+
       if !page.valid?
-        logger.warn "page: #{page.path}, code: #{page.http_response.code}, message: #{page.http_response.message.strip}"
+        logger.debug "page #{page.path} is invalid, aborting process"
         return false
       end
 
@@ -65,14 +63,14 @@ module Snapcrawl
         logger.info "screenshot for #{page.path} already exists"
       else
         logger.info "%{bold}capturing screenshot for #{page.path}%{reset}"
-        page.save_screenshot outfile, options
+        page.save_screenshot outfile
       end
 
       true
     end
 
     def file_fresh?(file)
-      age > 0 and File.exist?(file) and file_age(file) < age
+      Config.cache_life > 0 and File.exist?(file) and file_age(file) < Config.cache_life
     end
 
     def file_age(file)

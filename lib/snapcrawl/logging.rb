@@ -4,16 +4,16 @@ module Snapcrawl
   module Logging
     SEVERITY_COLORS = {
       'INFO' => :blue,
-      'WARN' => :red,
+      'WARN' => :yellow,
       'ERROR' => :red,
       'FATAL' => :red,
-      'DEBUG' => :none
+      'DEBUG' => :cyan
     }
 
     attr_writer :logger
 
     def logger
-      @logger ||= Logger.new(STDOUT, formatter: log_formatter)
+      @logger ||= Logger.new(STDOUT, formatter: log_formatter, level: Config.log_level)
     end
 
   private
@@ -31,7 +31,7 @@ module Snapcrawl
     end
 
     def log_colors!
-      tty? ? actual_colors : empty_colors
+      colors? ? actual_colors : empty_colors
     end
 
     def actual_colors
@@ -50,6 +50,14 @@ module Snapcrawl
         underlined: "", bold: "",
         none: "", reset: ""
       }
+    end
+
+    def colors?
+      if Config.log_color == 'auto'
+        tty?
+      else
+        Config.log_color
+      end
     end
 
     def tty?

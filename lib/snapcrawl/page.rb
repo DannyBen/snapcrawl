@@ -14,18 +14,12 @@ module Snapcrawl
     EXTENSION_BLACKLIST = "png|gif|jpg|pdf|zip"
     PROTOCOL_BLACKLIST = "mailto|tel"
 
-    def initialize(url, depth: 0, logger: nil)
+    def initialize(url, depth: 0)
       @url, @depth = url.protocolize, depth
     end
 
-    def http_response
-      @http_response ||= cache.get(url) do
-        HTTParty.get url
-      end
-    end
-
     def valid?
-      http_response.success?
+      http_response&.success?
     end
 
     def pages
@@ -47,14 +41,31 @@ module Snapcrawl
       @path ||= Addressable::URI.parse(url).request_uri
     end
 
-    def save_screenshot(outfile, width: 0, height: 1280, selector: nil)
-      screenshot = Screenshot.new url, height: height, width: width,
-        selector: selector
-
-      screenshot.save "#{outfile}"
+    def save_screenshot(outfile)
+      return false unless valid?
+      Screenshot.new(url).save "#{outfile}"
     end
 
   private
+
+    def http_response
+      @http_response ||= http_response!
+    end
+
+    def http_response!
+      response = cache.get(url) { HTTParty.get url }
+
+      if !response.success?
+        logger.warn "http error on %{purple}%{underlined}#{url}%{reset}, code: %{yellow}#{response.code}%{reset}, message: #{response.message.strip}"
+      end
+
+      response
+
+    rescue => e
+      logger.error "http error on %{purple}%{underlined}#{url}%{reset} - %{red}#{e.class}%{reset}: #{e.message}"
+      nil
+
+    end
 
     def normalize_links(links)
       result = []
@@ -85,7 +96,7 @@ module Snapcrawl
       begin
         link = Addressable::URI.join(url, link).to_s.dup
       rescue => e
-        logger.warn "#{e.class}: #{e.message} at #{link}"
+        logger.warn "%{red}#{e.class}%{reset}: #{e.message} on #{path} (link: #{link})"
         return nil
       end
 
@@ -95,7 +106,7 @@ module Snapcrawl
     end
 
     def cache
-      Lightly.new life: '1d'
+      Lightly.new life: Config.cache_life
     end
   end
 end
