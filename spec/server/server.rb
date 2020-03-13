@@ -24,7 +24,12 @@ get '/page' do
 end
 
 get '/ok' do
+  "<a href='/deeper/ok'>Depper Valid Link</a><br>" +
   "OK"
+end
+
+get '/deeper/ok' do
+  "ALSO OK"
 end
 
 get '/selector' do

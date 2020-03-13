@@ -1,6 +1,7 @@
 require 'snapcrawl/version'
 require 'snapcrawl/exceptions'
 require 'snapcrawl/refinements'
+require 'snapcrawl/dependencies'
 require 'snapcrawl/screenshot'
 require 'snapcrawl/page'
 require 'snapcrawl/crawler'

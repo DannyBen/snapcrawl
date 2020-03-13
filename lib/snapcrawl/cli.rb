@@ -17,8 +17,7 @@ module Snapcrawl
   private
 
     def execute(args)
-      raise MissingPhantomJS unless command_exist? "phantomjs"
-      raise MissingImageMagick unless command_exist? "convert"
+      Dependencies.verify
 
       url = args['URL'].protocolize
       crawler = Crawler.new url, opts_from_args(args)
@@ -32,10 +31,13 @@ module Snapcrawl
       case status
       when :start
         page = options[:page]
-        say "\n!txtpur!#{page.path}!txtrst! [depth: #{page.depth}]"
+        say "\n#{page.depth} !txtpur!#{page.path}"
       
       when :snap
         say "  !txtgrn!screenshot taken"
+
+      when :cached
+        say "  !txtblu!screenshot already exists"
       
       when :http_error
         say "  !txtred!http error: #{options[:code]} #{options[:message]}"
