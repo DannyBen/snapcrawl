@@ -9,6 +9,11 @@ module Snapcrawl
 
     def initialize(url)
       logger.debug "initializing crawler with %{green}#{url}%{reset}"
+      
+      config_for_display = Config.settings.dup
+      config_for_display['name_template'] = '%%{url}' 
+
+      logger.debug "config #{config_for_display}"
       @url = url
     end
 
@@ -18,8 +23,10 @@ module Snapcrawl
       process_todo while todo.any?
     end
 
+  private
+
     def process_todo
-      logger.debug "processing todo: %{green}#{todo.count} remaining%{reset}"
+      logger.debug "processing queue: %{green}#{todo.count} remaining%{reset}"
 
       url, page = todo.shift
       done.push url
@@ -28,8 +35,6 @@ module Snapcrawl
         register_sub_pages page.pages if page.depth < Config.depth
       end
     end
-
-  private
 
     def register_sub_pages(pages)
       pages.each do |sub_page|

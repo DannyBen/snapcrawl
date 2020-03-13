@@ -1,7 +1,11 @@
+require 'colsole'
+
 module Snapcrawl
   class Dependencies
     class << self
       include Logging
+      include Colsole
+      
       def verify
         return if @verified
 

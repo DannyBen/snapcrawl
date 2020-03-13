@@ -3,12 +3,21 @@ require 'sting'
 module Snapcrawl
   class Config < Sting
     class << self
-      def load(file)
-        file = "#{file}.yml" unless file =~ /\.ya?ml$/
+      include Logging
+      attr_accessor :logger
 
+      def load(file = nil)
         reset!
         push defaults
-        push file if File.exist? file
+        
+        if file
+          file = "#{file}.yml" unless file =~ /\.ya?ml$/
+          if File.exist? file
+            push file 
+          else
+            logger.debug "config file not found #{file}"
+          end
+        end
       end
 
     private

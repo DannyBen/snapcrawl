@@ -1,0 +1,21 @@
+Snapcrawl
+
+Usage:
+  snapcrawl URL [--config FILE]
+  snapcrawl -h | --help 
+  snapcrawl -v | --version
+
+Options:
+  -c, --config FILE
+    Path to config file, with or without the .yml extension
+    [default: snapcrawl.yml]
+
+  -h, --help
+    Show this screen
+
+  -v, --version
+    Show version number
+
+Examples:
+  snapcrawl example.com
+  snapcrawl example.com --config simple

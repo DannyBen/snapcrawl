@@ -1,0 +1,12 @@
+---
+depth: 3
+width: 768
+height: 0
+cache_life: 86400
+cache_dir: cache
+snaps_dir: snaps
+name_template: "%{url}"
+url_whitelist: 
+css_selector: 
+log_level: 3
+log_color: false

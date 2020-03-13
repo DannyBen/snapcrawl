@@ -22,9 +22,12 @@ module Snapcrawl
       http_response&.success?
     end
 
-    def pages
-      return nil unless valid?
-      links.map { |link| Page.new link, depth: depth+1 }
+    def site
+      @site ||= Addressable::URI.parse(url).site
+    end
+
+    def path
+      @path ||= Addressable::URI.parse(url).request_uri
     end
 
     def links
@@ -33,12 +36,9 @@ module Snapcrawl
       normalize_links doc.css('a')
     end
 
-    def site
-      @site ||= Addressable::URI.parse(url).site
-    end
-
-    def path
-      @path ||= Addressable::URI.parse(url).request_uri
+    def pages
+      return nil unless valid?
+      links.map { |link| Page.new link, depth: depth+1 }
     end
 
     def save_screenshot(outfile)

@@ -7,7 +7,7 @@ module Snapcrawl
     include Logging
     using StringRefinements
     
-    def call(args)
+    def call(args = [])
       begin
         execute Docopt::docopt(docopt, version: VERSION, argv: args)
       rescue Docopt::Exit => e
