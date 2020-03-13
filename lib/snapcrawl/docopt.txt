@@ -17,7 +17,7 @@ Options:
     Number of seconds to consider screenshots fresh [default: 86400]
 
   -d, --depth LEVELS
-    Number of levels to crawl [default: 1]
+    Number of levels to crawl [default: 0]
 
   -W, --width PIXELS
     Screen width in pixels [default: 1280]

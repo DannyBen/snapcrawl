@@ -1,6 +1,13 @@
 require 'snapcrawl/version'
 require 'snapcrawl/exceptions'
+require 'snapcrawl/refinements'
+require 'snapcrawl/screenshot'
+require 'snapcrawl/page'
 require 'snapcrawl/crawler'
+require 'snapcrawl/cli'
 
-require 'byebug' if ENV['BYEBUG']
+if ENV['BYEBUG']
+  require 'byebug'
+  require 'lp'
+end
 

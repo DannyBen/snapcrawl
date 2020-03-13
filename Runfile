@@ -1,3 +1,4 @@
+require "snapcrawl"
 require "runfile-tasks"
 require_relative 'lib/snapcrawl/version'
 
@@ -60,3 +61,5 @@ def run_at_front
     abort "\rBye"
   end
 end
+
+require_relative 'debug' if File.exist? 'debug.rb'

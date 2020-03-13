@@ -1,22 +1,30 @@
 #!/usr/bin/env ruby
 
 require 'snapcrawl'
+require 'colsole'
+
 trap(:INT) { abort "\r\nGoodbye" }
+
 include Snapcrawl
+include Colsole
 
 begin
-  Crawler.instance.handle ARGV
+  CLI.new.call ARGV
+
 rescue MissingPhantomJS => e
   message = "Cannot find phantomjs executable in the path, please install it first."
   say! "\n\n!undred!#{e.class}!txtrst!\n#{message}"
   exit 2
+
 rescue MissingImageMagick=> e
   message = "Cannot find convert (ImageMagick) executable in the path, please install it first."
   say! "\n\n!undred!#{e.class}!txtrst!\n#{message}"
   exit 3
+
 rescue => e
   puts e.backtrace.reverse if ENV['DEBUG']
-  say! "\n\n!undred!#{e.class}!txtrst!\n#{e.message}"
+  say! "\n!undred!#{e.class}!txtrst!\n#{e.message}"
   exit 1
+
 end
 
