@@ -12,11 +12,3 @@ if ENV['BYEBUG']
   require 'byebug'
   require 'lp'
 end
-
-module Snapcrawl
-  class << self
-    def asd
-      @asd ||= 'hello'
-    end
-  end
-end
