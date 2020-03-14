@@ -47,7 +47,7 @@ def run_as_daemon
       abort "Server may already be running.\nIf it is not, delete the 'sinatra.pid' file."
     end
 
-    run_bg 'ruby server.rb', pid: 'sinatra'
+    run_bg 'rackup -p 3000 -o 0.0.0.0', pid: 'sinatra'
   end
   say "!txtblu!Sinatra started. 'run server stop' to stop."
 end
@@ -55,7 +55,7 @@ end
 def run_at_front
   begin
     Dir.chdir 'spec/server' do
-      run 'ruby server.rb'
+      run 'rackup -p 3000 -o 0.0.0.0'
     end
   rescue Interrupt
     abort "\rBye"

@@ -54,4 +54,12 @@ describe 'integration' do
       expect(log).to match_fixture('integration/blacklist')
     end
   end
+
+  context "when screenshot errors" do
+    it "logs the error and continues" do
+      expect_any_instance_of(Screenshot).to receive(:save).and_raise(ScreenshotError, "Simulated error")
+      subject.call [url, "cache_life=0", "depth=0", "log_level=1"]
+      expect(log).to match_fixture('integration/screenshot-error')
+    end
+  end
 end

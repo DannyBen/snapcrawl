@@ -6,6 +6,9 @@
 [36mDEBUG[0m : processing queue: [32m1 remaining[0m
 [34m INFO[0m : processing [35m[4mhttp://localhost:3000[0m, depth: 0
 [34m INFO[0m : [1mcapturing screenshot for /[0m
-[36mDEBUG[0m : processing queue: [32m1 remaining[0m
+[36mDEBUG[0m : processing queue: [32m2 remaining[0m
 [34m INFO[0m : processing [35m[4mhttp://localhost:3000/page[0m, depth: 1
 [34m INFO[0m : [1mcapturing screenshot for /page[0m
+[36mDEBUG[0m : processing queue: [32m1 remaining[0m
+[34m INFO[0m : processing [35m[4mhttp://localhost:3000/errors[0m, depth: 1
+[34m INFO[0m : [1mcapturing screenshot for /errors[0m
