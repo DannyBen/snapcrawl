@@ -39,3 +39,18 @@ get '/selector' do
   "</p>" +
   "<p class='select-me'>And a small one</p>"
 end
+
+get '/filters' do
+  "<a href='/filters/include-me/1'>Included</a><br>" + 
+  "<a href='/filters/include-me/2'>Included</a><br>" + 
+  "<a href='/filters/exclude-me/1'>Excluded</a><br>" + 
+  "<a href='/filters/exclude-me/2'>Excluded</a><br>" 
+end
+
+get '/filters/include-me/:id' do
+  "include-me #{params[:id]}"
+end
+
+get '/filters/exclude-me/:id' do
+  "exclude-me #{params[:id]}"
+end

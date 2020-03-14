@@ -34,10 +34,21 @@ describe 'integration' do
   end
 
   context "with url_whitelist" do
+    let(:url) { 'http://localhost:3000/filters' }
+    
+    it "only processes urls that match the regex" do
+      subject.call [url, 'url_whitelist=include', 'log_level=0']
+      expect(log).to match_fixture('integration/whitelist')
+    end
     
   end
   
   context "with url_blacklist" do
-
+    let(:url) { 'http://localhost:3000/filters' }
+    
+    it "ignores urls that match the regex" do
+      subject.call [url, 'url_blacklist=exclude', 'log_level=0']
+      expect(log).to match_fixture('integration/blacklist')
+    end
   end
 end

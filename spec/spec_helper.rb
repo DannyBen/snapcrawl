@@ -13,6 +13,7 @@ include Snapcrawl
 ENV['TTY'] = 'on'
 
 system 'rm -rf snaps'
+system 'mkdir -p tmp'
 
 require_relative 'spec_mixin'
 RSpec.configure do |config|
