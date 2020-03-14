@@ -6,22 +6,17 @@ require 'rubygems'
 require 'bundler'
 Bundler.require :default, :development
 
+require 'stringio'
 include Snapcrawl
 
 # Consistent rspec fixtures output
 ENV['TTY'] = 'on'
 
-module SpecHelper
-  def supress_output
-    original_stdout = $stdout
-    $stdout = StringIO.new
-    yield
-  ensure
-    $stdout = original_stdout
-  end
-end
+system 'rm -rf snaps'
+system 'mkdir -p tmp'
 
+require_relative 'spec_mixin'
 RSpec.configure do |config|
-  config.extend SpecHelper
-  config.include SpecHelper
+  config.fixtures_path = 'spec/approvals'
+  config.include SpecMixin
 end

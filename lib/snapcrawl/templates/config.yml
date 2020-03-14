@@ -1,0 +1,41 @@
+# All values below are the default values
+
+# log level (0-4) 0=DEBUG 1=INFO 2=WARN 3=ERROR 4=FATAL
+log_level: 1
+
+# log_color (yes, no, auto)
+# yes  = always show log color
+# no   = never use colors
+# auto = only use colors when running in an interactive terminal
+log_color: auto
+
+# number of levels to crawl, 0 means capture only the root URL
+depth: 1
+
+# screenshot width in pixels
+width: 1280
+
+# screenshot height in pixels, 0 means the entire height
+height: 0
+
+# number of seconds to consider the page cache and its screenshot fresh
+cache_life: 86400
+
+# where to store the HTML page cache
+cache_dir: cache
+
+# where to store screenshots
+snaps_dir: snaps
+
+# screenshot filename template, where '%{url}' will be replaced with a 
+# slug version of the URL (no need to include the .png extension)
+name_template: '%{url}'
+
+# urls not matching this regular expression will be ignored
+url_whitelist: 
+
+# urls matching this regular expression will be ignored
+url_blacklist: 
+
+# take a screenshot of this CSS selector only
+css_selector: 

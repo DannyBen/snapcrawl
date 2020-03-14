@@ -1,7 +1,6 @@
 require 'sinatra'
-require "sinatra/reloader" if development?
 
-set :port, 4567
+set :port, 3000
 set :bind, '0.0.0.0'
 
 before do
@@ -18,13 +17,18 @@ get '/page' do
   "<a href='/ok'>Valid Link</a><br>" +
   "<a href='https://www.example.com/'>External</a><br>" +
   "<a href='https://www.\u0105.com/'>Unicode</a><br>" +
-  "<a href='\\problmatic \: link'>problematic link</a><br>" +
+  "<a href='\\problematic \: link'>problematic link</a><br>" +
   "<a name='anchor-without-href'>without href</a><br>" +
   "<a href='#id'>with hash only href</a><br>"
 end
 
 get '/ok' do
+  "<a href='/deeper/ok'>Depper Valid Link</a><br>" +
   "OK"
+end
+
+get '/deeper/ok' do
+  "ALSO OK"
 end
 
 get '/selector' do
@@ -34,4 +38,19 @@ get '/selector' do
   "The entire starfleet couldn't destroy the whole planet. It'd take a thousand ships with more fire power than I've... There's another ship coming in. Maybe they know what happened. It's an Imperial fighter. It followed us! No. It's a short range fighter. There aren't any bases around here. Where did it come from? It sure is leaving in a big hurry. If they identify us, we're in big trouble. Not if I can help it. Chewie...jam it's transmissions. It'd be as well to let it go. It's too far out of range. Not for long..." +
   "</p>" +
   "<p class='select-me'>And a small one</p>"
+end
+
+get '/filters' do
+  "<a href='/filters/include-me/1'>Included</a><br>" + 
+  "<a href='/filters/include-me/2'>Included</a><br>" + 
+  "<a href='/filters/exclude-me/1'>Excluded</a><br>" + 
+  "<a href='/filters/exclude-me/2'>Excluded</a><br>" 
+end
+
+get '/filters/include-me/:id' do
+  "include-me #{params[:id]}"
+end
+
+get '/filters/exclude-me/:id' do
+  "exclude-me #{params[:id]}"
 end

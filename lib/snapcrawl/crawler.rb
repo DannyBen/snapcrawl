@@ -1,267 +1,93 @@
-require 'colsole'
-require 'docopt'
 require 'fileutils'
-require 'httparty'
-require 'nokogiri'
-require 'ostruct'
-require 'pstore'
-require 'addressable/uri'
-require 'webshot'
 
 module Snapcrawl
-  include Colsole
-
   class Crawler
-    include Singleton
-    
-    def initialize
-      @storefile  = "snapcrawl.pstore"
-      @store      = PStore.new(@storefile)
+    using StringRefinements
+
+    attr_reader :url
+
+    def initialize(url)
+      $logger.debug "initializing crawler with %{green}#{url}%{reset}"
+      
+      config_for_display = Config.settings.dup
+      config_for_display['name_template'] = '%%{url}' 
+
+      $logger.debug "config #{config_for_display}"
+      @url = url
     end
 
-    def handle(args)
-      @done = []
-      begin
-        execute Docopt::docopt(doc, version: VERSION, argv: args)
-      rescue Docopt::Exit => e
-        puts e.message
-      end
-    end
-
-    def execute(args)
-      raise MissingPhantomJS unless command_exist? "phantomjs"
-      raise MissingImageMagick unless command_exist? "convert"
-      crawl args['URL'].dup, opts_from_args(args)
-    end
-
-    def clear_cache
-      FileUtils.rm @storefile if File.exist? @storefile
+    def crawl
+      Dependencies.verify
+      todo[url] = Page.new url
+      process_todo while todo.any?
     end
 
   private
 
-    def crawl(url, opts={})
-      url = protocolize url
-      defaults = {
-        width: 1280,
-        height: 0,
-        depth: 1,
-        age: 86400,
-        folder: 'snaps',
-        name: '%{url}',
-        base: url,
-      }
-      urls = [url]
+    def process_todo
+      $logger.debug "processing queue: %{green}#{todo.count} remaining%{reset}"
 
-      @opts = OpenStruct.new defaults.merge(opts)
+      url, page = todo.shift
+      done.push url
 
-      make_screenshot_dir @opts.folder
-
-      @opts.depth.times do
-        urls = crawl_and_snap urls
+      if process_page page
+        register_sub_pages page.pages if page.depth < Config.depth
       end
     end
 
-    def crawl_and_snap(urls)
-      new_urls = []
-      urls.each do |url|
-        next if @done.include? url
-        @done << url
-        say "\n!txtgrn!-----> Visit: #{url}"
-        if @opts.only and url !~ /#{@opts.only}/
-          say "       Snap:  Skipping. Does not match regex"
-        else
-          snap url
+    def register_sub_pages(pages)
+      pages.each do |sub_page|
+        next if todo.has_key?(sub_page) or done.include?(sub_page)
+        
+        if Config.url_whitelist and sub_page.path !~ /#{Config.url_whitelist}/
+          $logger.debug "ignoring %{purple}%{underlined}#{sub_page.url}%{reset}, reason: whitelist"
+          next
         end
-        new_urls += extract_urls_from url
+
+        if Config.url_blacklist and sub_page.path =~ /#{Config.url_blacklist}/
+          $logger.debug "ignoring %{purple}%{underlined}#{sub_page.url}%{reset}, reason: blacklist"
+          next
+        end
+
+        todo[sub_page.url] = sub_page
       end
-      new_urls
     end
 
-    # Take a screenshot of a URL, unless we already did so recently
-    def snap(url)
-      file = image_path_for(url)
-      if file_fresh? file
-        say "       Snap:  Skipping. File exists and seems fresh"
+    def process_page(page)
+      outfile = "#{Config.snaps_dir}/#{Config.name_template}.png" % { url: page.url.to_slug }
+
+      $logger.info "processing %{purple}%{underlined}#{page.url}%{reset}, depth: #{page.depth}"
+
+      if !page.valid?
+        $logger.debug "page #{page.path} is invalid, aborting process"
+        return false
+      end
+
+      if file_fresh? outfile
+        $logger.info "screenshot for #{page.path} already exists"
       else
-        snap!(url)
-      end
-    end
-
-    # Take a screenshot of the URL, even if file exists
-    def snap!(url)
-      say "       !txtblu!Snap!!txtrst!  Snapping picture... "
-      image_path = image_path_for url
-
-      fetch_opts = { allowed_status_codes: [404, 401, 403] }
-      if @opts.selector
-        fetch_opts[:selector] = @opts.selector
-        fetch_opts[:full] = false
+        $logger.info "%{bold}capturing screenshot for #{page.path}%{reset}"
+        page.save_screenshot outfile
       end
 
-      webshot_capture url, image_path, fetch_opts
-      say "done"
+      true
     end
 
-    def webshot_capture(url, image_path, fetch_opts)
-      webshot_capture! url, image_path, fetch_opts
-    rescue => e
-      say "!txtred!FAILED"
-      say "!txtred!  !    #{e.class}: #{e.message.strip}"
-    end
-
-    def webshot_capture!(url, image_path, fetch_opts)
-      hide_output do
-        webshot.capture url, image_path, fetch_opts do |magick|
-          magick.combine_options do |c|
-            c.background "white"
-            c.gravity 'north'
-            c.quality 100
-            c.extent @opts.height > 0 ? "#{@opts.width}x#{@opts.height}" : "#{@opts.width}x"
-          end
-        end
-      end
-    end
-
-    def extract_urls_from(url)
-      cached = nil
-      @store.transaction { cached = @store[url] }
-      if cached
-        say "       Crawl: Page was cached. Reading subsequent URLs from cache"
-        return cached
-      else
-        return extract_urls_from! url
-      end
-    end
-
-    def extract_urls_from!(url)
-      say "       !txtblu!Crawl!!txtrst! Extracting links... "
-
-      begin
-        response = HTTParty.get url
-        if response.success?
-          doc = Nokogiri::HTML response.body
-          links = doc.css('a')
-          links, warnings = normalize_links links
-          @store.transaction { @store[url] = links }
-          say "done"
-          warnings.each do |warning|
-            say "!txtylw!       Warn:  #{warning[:link]}"
-            say word_wrap "              #{warning[:message]}"
-          end
-        else
-          links = []
-          say "!txtred!FAILED"
-          say "!txtred!  !    HTTP Error: #{response.code} #{response.message.strip} at #{url}"
-        end
-      end
-      links
-    end
-
-    # mkdir the screenshots folder, if needed
-    def make_screenshot_dir(dir)
-      Dir.exist? dir or FileUtils.mkdir_p dir
-    end
-
-    # Convert any string to a proper handle
-    def handelize(str)
-      str.downcase.gsub(/[^a-z0-9]+/, '-')
-    end
-
-    # Return proper image path for a UR
-    def image_path_for(url)
-      "#{@opts.folder}/#{@opts.name}.png" % { url: handelize(url) }
-    end
-
-    # Add protocol to a URL if neeed
-    def protocolize(url)
-      url =~ /^http/ ? url : "http://#{url}"
-    end
-
-    # Return true if the file exists and is not too old
     def file_fresh?(file)
-      @opts.age > 0 and File.exist?(file) and file_age(file) < @opts.age
+      Config.cache_life > 0 and File.exist?(file) and file_age(file) < Config.cache_life
     end
 
-    # Return file age in seconds
     def file_age(file)
       (Time.now - File.stat(file).mtime).to_i
     end
 
-    # Process an array of links and return a better one
-    def normalize_links(links)
-      extensions = "png|gif|jpg|pdf|zip"
-      beginnings = "mailto|tel"
-
-      links_array = []
-      warnings = []
-
-      links.each do |link|
-        link = link.attribute('href').to_s.dup
-
-        # Remove #hash
-        link.gsub!(/#.+$/, '')
-        next if link.empty?
-
-        # Remove links to specific extensions and protocols
-        next if link =~ /\.(#{extensions})(\?.*)?$/
-        next if link =~ /^(#{beginnings})/
-
-        # Strip spaces
-        link.strip!
-
-        # Convert relative links to absolute
-        begin
-          link = Addressable::URI.join( @opts.base, link ).to_s.dup
-        rescue => e
-          warnings << { link: link, message: "#{e.class} #{e.message}" }
-          next
-        end
-
-        # Keep only links in our base domain
-        next unless link.include? @opts.base
-
-        links_array << link
-      end
-
-      [links_array.uniq, warnings]
+    def todo
+      @todo ||= {}
     end
 
-    def doc
-      @doc ||= File.read docopt
+    def done
+      @done ||= []
     end
 
-    def docopt
-      File.expand_path "docopt.txt", __dir__
-    end
-
-    def opts_from_args(args)
-      opts = {}
-      %w[folder name selector only].each do |opt|
-        opts[opt.to_sym] = args["--#{opt}"] if args["--#{opt}"]
-      end
-
-      %w[age depth width height].each do |opt|
-        opts[opt.to_sym] = args["--#{opt}"].to_i if args["--#{opt}"]
-      end
-
-      opts
-    end
-
-    def webshot
-      @webshot ||= Webshot::Screenshot.instance
-    end
-
-    # The webshot gem messes with stdout/stderr streams so we keep it in 
-    # check by using this method. Also, in some sites (e.g. uown.co) it
-    # prints some output to stdout, this is why we override $stdout for
-    # the duration of the run.
-    def hide_output
-      keep_stdout, keep_stderr = $stdout, $stderr
-      $stdout, $stderr = StringIO.new, StringIO.new
-      yield
-    ensure
-      $stdout, $stderr = keep_stdout, keep_stderr
-    end
   end
 end

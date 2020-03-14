@@ -17,10 +17,12 @@ Gem::Specification.new do |s|
   s.license     = 'MIT'
   s.required_ruby_version = '>= 2.3'
 
-  s.add_runtime_dependency 'colsole', '~> 0.5', '>= 0.5.4'
-  s.add_runtime_dependency 'docopt', '~> 0.5'
-  s.add_runtime_dependency 'nokogiri', '~> 1.6'
+  s.add_runtime_dependency 'colsole', '~> 0.7'
+  s.add_runtime_dependency 'docopt', '~> 0.6'
+  s.add_runtime_dependency 'nokogiri', '~> 1.10'
   s.add_runtime_dependency 'webshot', '~> 0.1'
-  s.add_runtime_dependency 'httparty', '~> 0.17'
+  s.add_runtime_dependency 'httparty', '~> 0.18'
   s.add_runtime_dependency 'addressable', '~> 2.7'
+  s.add_runtime_dependency 'lightly', '~> 0.3'
+  s.add_runtime_dependency 'sting', '~> 0.4'
 end

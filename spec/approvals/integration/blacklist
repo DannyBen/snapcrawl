@@ -1,0 +1,14 @@
+[36mDEBUG[0m : initializing cli
+[36mDEBUG[0m : initializing crawler with [32mhttp://localhost:3000/filters[0m
+[36mDEBUG[0m : config {"depth"=>1, "width"=>1280, "height"=>0, "cache_life"=>86400, "cache_dir"=>"cache", "snaps_dir"=>"snaps", "name_template"=>"%{url}", "url_whitelist"=>nil, "url_blacklist"=>"exclude", "css_selector"=>nil, "log_level"=>0, "log_color"=>"auto"}
+[36mDEBUG[0m : processing queue: [32m1 remaining[0m
+[34m INFO[0m : processing [35m[4mhttp://localhost:3000/filters[0m, depth: 0
+[34m INFO[0m : screenshot for /filters already exists
+[36mDEBUG[0m : ignoring [35m[4mhttp://localhost:3000/filters/exclude-me/1[0m, reason: blacklist
+[36mDEBUG[0m : ignoring [35m[4mhttp://localhost:3000/filters/exclude-me/2[0m, reason: blacklist
+[36mDEBUG[0m : processing queue: [32m2 remaining[0m
+[34m INFO[0m : processing [35m[4mhttp://localhost:3000/filters/include-me/1[0m, depth: 1
+[34m INFO[0m : screenshot for /filters/include-me/1 already exists
+[36mDEBUG[0m : processing queue: [32m1 remaining[0m
+[34m INFO[0m : processing [35m[4mhttp://localhost:3000/filters/include-me/2[0m, depth: 1
+[34m INFO[0m : screenshot for /filters/include-me/2 already exists
