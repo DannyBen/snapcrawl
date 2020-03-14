@@ -15,7 +15,7 @@ describe Page do
       let(:url) { 'http://localhost:3000/not-found' }
 
       it "returns false and logs a warning" do
-        expect(subject.logger).to receive(:warn).with(/code.*404/)
+        expect($logger).to receive(:warn).with(/code.*404/)
         expect(subject).not_to be_valid
       end
     end
@@ -24,7 +24,7 @@ describe Page do
       let(:url) { 'http://localhost:1111/' }
 
       it "returns false and logs an error" do
-        expect(subject.logger).to receive(:error).with(/connection refused/i)
+        expect($logger).to receive(:error).with(/connection refused/i)
         expect(subject).not_to be_valid
       end      
     end
@@ -44,14 +44,14 @@ describe Page do
 
   describe '#links' do
     it "returns an array of links on the page and logs warnings" do
-      expect(subject.logger).to receive(:warn).with(/problematic/)
+      expect($logger).to receive(:warn).with(/problematic/)
       expect(subject.links).to eq ["http://localhost:3000/broken", "http://localhost:3000/ok"]
     end
   end
 
   describe '#pages' do
     it "returns an array of Page objects from the links" do
-      expect(subject.logger).to receive(:warn).with(/problematic/)
+      expect($logger).to receive(:warn).with(/problematic/)
       pages = subject.pages
       expect(pages.count).to eq 2
       expect(pages.first).to be_a Page

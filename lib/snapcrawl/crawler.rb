@@ -2,18 +2,17 @@ require 'fileutils'
 
 module Snapcrawl
   class Crawler
-    include Logging
     using StringRefinements
 
     attr_reader :url
 
     def initialize(url)
-      logger.debug "initializing crawler with %{green}#{url}%{reset}"
+      $logger.debug "initializing crawler with %{green}#{url}%{reset}"
       
       config_for_display = Config.settings.dup
       config_for_display['name_template'] = '%%{url}' 
 
-      logger.debug "config #{config_for_display}"
+      $logger.debug "config #{config_for_display}"
       @url = url
     end
 
@@ -26,7 +25,7 @@ module Snapcrawl
   private
 
     def process_todo
-      logger.debug "processing queue: %{green}#{todo.count} remaining%{reset}"
+      $logger.debug "processing queue: %{green}#{todo.count} remaining%{reset}"
 
       url, page = todo.shift
       done.push url
@@ -41,12 +40,12 @@ module Snapcrawl
         next if todo.has_key?(sub_page) or done.include?(sub_page)
         
         if Config.url_whitelist and sub_page.path !~ /#{Config.url_whitelist}/
-          logger.debug "ignoring %{purple}%{underlined}#{sub_page.url}%{reset}, reason: whitelist"
+          $logger.debug "ignoring %{purple}%{underlined}#{sub_page.url}%{reset}, reason: whitelist"
           next
         end
 
         if Config.url_blacklist and sub_page.path =~ /#{Config.url_blacklist}/
-          logger.debug "ignoring %{purple}%{underlined}#{sub_page.url}%{reset}, reason: blacklist"
+          $logger.debug "ignoring %{purple}%{underlined}#{sub_page.url}%{reset}, reason: blacklist"
           next
         end
 
@@ -57,17 +56,17 @@ module Snapcrawl
     def process_page(page)
       outfile = "#{Config.snaps_dir}/#{Config.name_template}.png" % { url: page.url.to_slug }
 
-      logger.info "processing %{purple}%{underlined}#{page.url}%{reset}, depth: #{page.depth}"
+      $logger.info "processing %{purple}%{underlined}#{page.url}%{reset}, depth: #{page.depth}"
 
       if !page.valid?
-        logger.debug "page #{page.path} is invalid, aborting process"
+        $logger.debug "page #{page.path} is invalid, aborting process"
         return false
       end
 
       if file_fresh? outfile
-        logger.info "screenshot for #{page.path} already exists"
+        $logger.info "screenshot for #{page.path} already exists"
       else
-        logger.info "%{bold}capturing screenshot for #{page.path}%{reset}"
+        $logger.info "%{bold}capturing screenshot for #{page.path}%{reset}"
         page.save_screenshot outfile
       end
 

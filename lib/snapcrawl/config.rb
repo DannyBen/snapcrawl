@@ -4,22 +4,18 @@ require 'fileutils'
 module Snapcrawl
   class Config < Sting
     class << self
-      attr_accessor :logger
-
       def load(file = nil)
         reset!
         push defaults
         
-        return :default unless file
+        return unless file
 
         file = "#{file}.yml" unless file =~ /\.ya?ml$/
 
         if File.exist? file
           push file
-          :loaded
         else
           create_config file
-          :created
         end
       end
 
@@ -42,6 +38,7 @@ module Snapcrawl
       end
 
       def create_config(file)
+        $logger.debug "creating config file %{green}#{file}%{reset}"
         content = File.read config_template
         dir = File.dirname file
         FileUtils.mkdir_p dir

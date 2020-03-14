@@ -5,7 +5,6 @@ require 'fileutils'
 module Snapcrawl
   class CLI
     include Colsole
-    include Logging
     using StringRefinements
     using PairSplit
     
@@ -21,14 +20,14 @@ module Snapcrawl
 
     def execute(args)
       status = Config.load args['--config']
-      logger.debug 'config file created' if status == :created
+      $logger.debug 'config file created' if status == :created
 
       tweaks = args['SETTINGS'].pair_split
       apply_tweaks tweaks if tweaks
 
       Dependencies.verify
       
-      logger.debug 'initializing cli'
+      $logger.debug 'initializing cli'
       FileUtils.mkdir_p Config.snaps_dir
 
       url = args['URL'].protocolize
@@ -48,7 +47,7 @@ module Snapcrawl
     def apply_tweaks(tweaks)
       tweaks.each do |key, value|
         Config.settings[key] = value
-        Config.logger.level = value if key == 'log_level'
+        $logger.level = value if key == 'log_level'
       end
     end
 

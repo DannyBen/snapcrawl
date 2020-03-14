@@ -2,7 +2,7 @@ require 'snapcrawl/version'
 require 'snapcrawl/exceptions'
 require 'snapcrawl/refinements'
 require 'snapcrawl/log_helpers'
-require 'snapcrawl/logging'
+require 'snapcrawl/pretty_logger'
 require 'snapcrawl/dependencies'
 require 'snapcrawl/config'
 require 'snapcrawl/screenshot'
@@ -14,3 +14,6 @@ if ENV['BYEBUG']
   require 'byebug'
   require 'lp'
 end
+
+Snapcrawl::Config.load
+$logger = Snapcrawl::PrettyLogger.new
