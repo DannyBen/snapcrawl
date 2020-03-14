@@ -1,5 +1,4 @@
-Snapcrawl - crawl a website and take screenshots
-==================================================
+# Snapcrawl - crawl a website and take screenshots
 
 [![Gem Version](https://badge.fury.io/rb/snapcrawl.svg)](http://badge.fury.io/rb/snapcrawl)
 [![Build Status](https://github.com/DannyBen/snapcrawl/workflows/Test/badge.svg)](https://github.com/DannyBen/snapcrawl/actions?query=workflow%3ATest)
@@ -11,8 +10,7 @@ Snapcrawl is a command line utility for crawling a website and saving
 screenshots. 
 
 
-Features
---------------------------------------------------
+## Features
 
 - Crawls a website to any given depth and saves screenshots
 - Can capture the full length of the page
@@ -21,100 +19,109 @@ Features
 - Uses local caching to avoid expensive crawl operations if not needed
 - Reports broken links
 
+## Install
 
-Prerequisites
---------------------------------------------------
-
-Snapcrawl requires [PhantomJS][1] and [ImageMagick][2].
-
-
-Docker Image
---------------------------------------------------
+**Using Docker**
 
 You can run Snapcrawl by using this docker image (which contains all the
 necessary prerequisites):
 
-```
-$ docker pull dannyben/snapcrawl
-```
-
-Then you can use it like this:
-
-```
-$ docker run --rm -it dannyben/snapcrawl --help
+```shell
+$ alias snapcrawl="docker run --rm -it --volume $PWD:/app dannyben/snapcrawl"
 ```
 
-For more information refer to the [docker-snapcrawl][3] repository.
+For more information on the Docker image, refer to the [docker-snapcrawl][3] repository.
 
+**Using Ruby**
 
-Install
---------------------------------------------------
-
-```
+```shell
 $ gem install snapcrawl
 ```
 
+Note that Snapcrawl requires [PhantomJS][1] and [ImageMagick][2].
 
-Usage
---------------------------------------------------
+## Usage
 
-```
-$ snapcrawl --help
+Snapcrawl can be configured either through a configuration file (YAML), or by specifying options in the command line.
 
-Snapcrawl
-
+```shell
+$ snapcrawl
 Usage:
-  snapcrawl URL [options]
-  snapcrawl -h | --help 
+  snapcrawl URL [--config FILE] [SETTINGS...]
+  snapcrawl -h | --help
   snapcrawl -v | --version
-
-Options:
-  -f, --folder PATH
-    Where to save screenshots [default: snaps]
-
-  -n, --name TEMPLATE
-    Filename template. Include the string '%{url}' anywhere in the name to 
-    use the captured URL in the filename [default: %{url}]
-
-  -a, --age SECONDS
-    Number of seconds to consider screenshots fresh [default: 86400]
-
-  -d, --depth LEVELS
-    Number of levels to crawl [default: 1]
-
-  -W, --width PIXELS
-    Screen width in pixels [default: 1280]
-
-  -H, --height PIXELS
-    Screen height in pixels. Use 0 to capture the full page [default: 0]
-
-  -s, --selector SELECTOR
-    CSS selector to capture
-
-  -o, --only REGEX
-    Include only URLs that match REGEX
-
-  -h, --help
-    Show this screen
-
-  -v, --version
-    Show version number
-
-Examples:
-  snapcrawl example.com
-  snapcrawl example.com -d2 -fscreens
-  snapcrawl example.com -d2 > out.txt 2> err.txt &
-  snapcrawl example.com -W360 -H480
-  snapcrawl example.com --selector "#main-content"
-  snapcrawl example.com --only "products|collections"
-  snapcrawl example.com --name "screenshot-%{url}"
-  snapcrawl example.com --name "`date +%Y%m%d`_%{url}"
 ```
+
+The default configuration filename is `snapcrawl.yml`.
+
+Using the `--config` flag will create a template configuration file if it is not present:
+
+```shell
+$ snapcrawl example.com --config snapcrawl
+```
+
+### Specifying options in the command line
+
+All configuration options can be specified in the command line as `key=value` pairs:
+
+```shell
+$ snapcrawl example.com log_level=0 depth=2 width=1024
+```
+
+### Sample configuration file
+
+```yaml
+# All values below are the default values
+
+# log level (0-4) 0=DEBUG 1=INFO 2=WARN 3=ERROR 4=FATAL
+log_level: 1
+
+# log_color (yes, no, auto)
+# yes  = always show log color
+# no   = never use colors
+# auto = only use colors when running in an interactive terminal
+log_color: auto
+
+# number of levels to crawl, 0 means capture only the root URL
+depth: 1
+
+# screenshot width in pixels
+width: 1280
+
+# screenshot height in pixels, 0 means the entire height
+height: 0
+
+# number of seconds to consider the page cache and its screenshot fresh
+cache_life: 86400
+
+# where to store the HTML page cache
+cache_dir: cache
+
+# where to store screenshots
+snaps_dir: snaps
+
+# screenshot filename template, where '%{url}' will be replaced with a 
+# slug version of the URL (no need to include the .png extension)
+name_template: '%{url}'
+
+# urls not matching this regular expression will be ignored
+url_whitelist: 
+
+# urls matching this regular expression will be ignored
+url_blacklist: 
+
+# take a screenshot of this CSS selector only
+css_selector: 
+```
+
+## Contributing / Support
+If you experience any issue, have a question or a suggestion, or if you wish
+to contribute, feel free to [open an issue][issues].
 
 ---
 
 [1]: http://phantomjs.org/download.html
 [2]: https://imagemagick.org/script/download.php
 [3]: https://github.com/DannyBen/docker-snapcrawl
-
+[issues]: https://github.com/DannyBen/snapcrawl/issues
 
