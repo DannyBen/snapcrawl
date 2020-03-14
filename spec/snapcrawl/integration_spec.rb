@@ -3,7 +3,10 @@ require 'spec_helper'
 describe 'integration' do
   let(:url) { 'http://localhost:3000' }
   subject { CLI.new }
-  before { @logger = fresh_logger }
+  before do
+    @logger = fresh_logger
+    Config.load   # reload defaults
+  end
 
   let(:log) { @logger.string }
 

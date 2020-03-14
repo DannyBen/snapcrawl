@@ -7,6 +7,7 @@ cache_dir: cache
 snaps_dir: snaps
 name_template: "%{url}"
 url_whitelist: 
+url_blacklist: 
 css_selector: 
 log_level: 1
 log_color: auto

@@ -19,8 +19,8 @@ module Snapcrawl
   private
 
     def execute(args)
-      status = Config.load args['--config']
-      $logger.debug 'config file created' if status == :created
+      config_file = args['--config']
+      Config.load config_file if config_file
 
       tweaks = args['SETTINGS'].pair_split
       apply_tweaks tweaks if tweaks

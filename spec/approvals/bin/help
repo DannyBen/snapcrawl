@@ -7,9 +7,9 @@ Usage:
 
 Options:
   -c, --config FILE
-    Path to config file, with or without the .yml extension
-    A sample file will be created if not found
-    [default: snapcrawl.yml]
+    Path to config file, with or without the .yml extension.
+    A sample file will be created if not found.
+    The default filename is 'snapcrawl.yml'.
 
   -h, --help
     Show this screen
@@ -18,9 +18,9 @@ Options:
     Show version number
 
 Settings:
-  You may provide any of the options available in the config as 'key=value'.
+  Provide any of the options available in the config as 'key=value'.
 
 Examples:
   snapcrawl example.com
   snapcrawl example.com --config simple
-  snapcrawl example.com depth=1 log_level=2
+  snapcrawl example.com depth=1 log_level=2 width=768
