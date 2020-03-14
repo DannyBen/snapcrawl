@@ -67,10 +67,16 @@ module Snapcrawl
         $logger.info "screenshot for #{page.path} already exists"
       else
         $logger.info "%{bold}capturing screenshot for #{page.path}%{reset}"
-        page.save_screenshot outfile
+        save_screenshot page, outfile
       end
 
       true
+    end
+
+    def save_screenshot(page, outfile)
+      page.save_screenshot outfile
+    rescue => e
+      $logger.error "screenshot error on %{purple}%{underlined}#{page.path}%{reset} - %{red}#{e.class}%{reset}: #{e.message}"
     end
 
     def file_fresh?(file)

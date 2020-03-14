@@ -1,0 +1,3 @@
+[34m INFO[0m : processing [35m[4mhttp://localhost:3000[0m, depth: 0
+[34m INFO[0m : [1mcapturing screenshot for /[0m
+[31mERROR[0m : screenshot error on [35m[4m/[0m - [31mSnapcrawl::ScreenshotError[0m: Simulated error
