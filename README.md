@@ -27,7 +27,7 @@ You can run Snapcrawl by using this docker image (which contains all the
 necessary prerequisites):
 
 ```shell
-$ alias snapcrawl="docker run --rm -it --volume $PWD:/app dannyben/snapcrawl"
+$ alias snapcrawl='docker run --rm -it --volume $PWD:/app dannyben/snapcrawl'
 ```
 
 For more information on the Docker image, refer to the [docker-snapcrawl][3] repository.
