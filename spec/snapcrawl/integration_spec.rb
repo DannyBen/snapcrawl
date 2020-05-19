@@ -12,27 +12,27 @@ describe 'integration' do
 
   it "works" do
     subject.call [url]
-    expect(log).to match_fixture('integration/default-config')
+    expect(log).to match_approval('integration/default-config')
   end
 
   context "with depth=0" do
     it "captures the first page only" do
       subject.call [url, 'depth=0']
-      expect(log).to match_fixture('integration/depth-0')
+      expect(log).to match_approval('integration/depth-0')
     end
   end
 
   context "with depth=3 log_level=2" do
     it "captures 4 levels and shows warnings and above" do
       subject.call [url, 'depth=3', 'log_level=2']
-      expect(log).to match_fixture('integration/depth-3')
+      expect(log).to match_approval('integration/depth-3')
     end
   end
 
   context "with log_color=no" do
     it "outputs without colors" do
       subject.call [url, 'log_color=no', 'log_level=1']
-      expect(log).to match_fixture('integration/log-color-no')
+      expect(log).to match_approval('integration/log-color-no')
     end
   end
 
@@ -41,7 +41,7 @@ describe 'integration' do
     
     it "only processes urls that match the regex" do
       subject.call [url, 'url_whitelist=include', 'log_level=0']
-      expect(log).to match_fixture('integration/whitelist')
+      expect(log).to match_approval('integration/whitelist')
     end
     
   end
@@ -51,7 +51,7 @@ describe 'integration' do
     
     it "ignores urls that match the regex" do
       subject.call [url, 'url_blacklist=exclude', 'log_level=0']
-      expect(log).to match_fixture('integration/blacklist')
+      expect(log).to match_approval('integration/blacklist')
     end
   end
 
@@ -59,7 +59,7 @@ describe 'integration' do
     it "logs the error and continues" do
       expect_any_instance_of(Screenshot).to receive(:save).and_raise(ScreenshotError, "Simulated error")
       subject.call [url, "cache_life=0", "depth=0", "log_level=1"]
-      expect(log).to match_fixture('integration/screenshot-error')
+      expect(log).to match_approval('integration/screenshot-error')
     end
   end
 end
