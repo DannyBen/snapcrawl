@@ -9,6 +9,7 @@ version Snapcrawl::VERSION
 RunfileTasks::RubyGems.all 'snapcrawl'
 RunfileTasks::Testing.rspec
 RunfileTasks::Docs.rdoc
+RunfileTasks::Changelog.generator 'DannyBen/snapcrawl'
 
 help   "Regenerate the command line output in the README file"
 action :patchme do
