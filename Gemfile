@@ -11,4 +11,5 @@ group :development, :test do
   gem 'runfile-tasks'
   gem 'simplecov'
   gem 'sinatra'
+  gem 'puma'
 end
