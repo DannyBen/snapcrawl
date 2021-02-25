@@ -1,6 +1,12 @@
 Change Log
 ========================================
 
+v0.5.2 - 2021-02-25
+----------------------------------------
+
+- Fix logging percent issue
+
+
 ## [v0.5.1](https://github.com/DannyBen/snapcrawl/tree/v0.5.1) (2020-03-14)
 
 [Full Changelog](https://github.com/DannyBen/snapcrawl/compare/v0.5.0...v0.5.1)
