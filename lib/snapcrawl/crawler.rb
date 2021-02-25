@@ -7,7 +7,7 @@ module Snapcrawl
     attr_reader :url
 
     def initialize(url)
-      $logger.debug "initializing crawler with %{green}#{url}%{reset}"
+      $logger.debug "initializing crawler with !txtgrn!#{url}"
       
       config_for_display = Config.settings.dup
       config_for_display['name_template'] = '%%{url}' 
@@ -25,7 +25,7 @@ module Snapcrawl
   private
 
     def process_todo
-      $logger.debug "processing queue: %{green}#{todo.count} remaining%{reset}"
+      $logger.debug "processing queue: !txtgrn!#{todo.count} remaining"
 
       url, page = todo.shift
       done.push url
@@ -40,12 +40,12 @@ module Snapcrawl
         next if todo.has_key?(sub_page) or done.include?(sub_page)
         
         if Config.url_whitelist and sub_page.path !~ /#{Config.url_whitelist}/
-          $logger.debug "ignoring %{purple}%{underlined}#{sub_page.url}%{reset}, reason: whitelist"
+          $logger.debug "ignoring !undpur!#{sub_page.url}!txtrst!, reason: whitelist"
           next
         end
 
         if Config.url_blacklist and sub_page.path =~ /#{Config.url_blacklist}/
-          $logger.debug "ignoring %{purple}%{underlined}#{sub_page.url}%{reset}, reason: blacklist"
+          $logger.debug "ignoring !undpur!#{sub_page.url}!txtrst!, reason: blacklist"
           next
         end
 
@@ -56,7 +56,7 @@ module Snapcrawl
     def process_page(page)
       outfile = "#{Config.snaps_dir}/#{Config.name_template}.png" % { url: page.url.to_slug }
 
-      $logger.info "processing %{purple}%{underlined}#{page.url}%{reset}, depth: #{page.depth}"
+      $logger.info "processing !undpur!#{page.url}!txtrst!, depth: #{page.depth}"
 
       if !page.valid?
         $logger.debug "page #{page.path} is invalid, aborting process"
@@ -66,7 +66,7 @@ module Snapcrawl
       if file_fresh? outfile
         $logger.info "screenshot for #{page.path} already exists"
       else
-        $logger.info "%{bold}capturing screenshot for #{page.path}%{reset}"
+        $logger.info "!bldgrn!capturing screenshot for #{page.path}"
         save_screenshot page, outfile
       end
 
@@ -76,7 +76,7 @@ module Snapcrawl
     def save_screenshot(page, outfile)
       page.save_screenshot outfile
     rescue => e
-      $logger.error "screenshot error on %{purple}%{underlined}#{page.path}%{reset} - %{red}#{e.class}%{reset}: #{e.message}"
+      $logger.error "screenshot error on !undpur!#{page.path}!txtrst! - !txtred!#{e.class}!txtrst!: #{e.message}"
     end
 
     def file_fresh?(file)

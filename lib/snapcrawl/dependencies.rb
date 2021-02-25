@@ -8,10 +8,10 @@ module Snapcrawl
       def verify
         return if @verified
 
-        $logger.debug 'verifying %{green}phantomjs%{reset} is present'
+        $logger.debug 'verifying !txtgrn!phantomjs!txtrst! is present'
         raise MissingPhantomJS unless command_exist? "phantomjs"
 
-        $logger.debug 'verifying %{green}imagemagick%{reset} is present'
+        $logger.debug 'verifying !txtgrn!imagemagick!txtrst! is present'
         raise MissingImageMagick unless command_exist? "convert"
 
         @verified = true

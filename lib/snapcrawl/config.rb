@@ -16,10 +16,10 @@ module Snapcrawl
         #        Config. The $logger is available, but it was not yet fully
         #        configured with log_level etc.
         if File.exist? file
-          # $logger.debug "loading config file %{green}#{file}%{reset}"
+          # $logger.debug "loading config file !txtgrn!#{file}"
           push file
         else
-          # $logger.debug "creating config file %{green}#{file}%{reset}"
+          # $logger.debug "creating config file !txtgrn!#{file}"
           create_config file
         end
       end
