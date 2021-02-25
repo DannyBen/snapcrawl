@@ -16,16 +16,12 @@ module Snapcrawl
       proc do |severity, _time, _prog, message|
         severity_color = SEVERITY_COLORS[severity]
         line = "!#{severity_color}!#{severity.rjust 5}!txtrst! : #{message}\n"
-        colors? ? colorize(line) : strip_color_markers(line)
+        use_colors? ? colorize(line) : strip_color_markers(line)
       end
     end
 
-    def colors?
-      if Config.log_color == 'auto'
-        tty?
-      else
-        Config.log_color
-      end
+    def use_colors?
+      @use_colors ||= (Config.log_color == 'auto' ? tty? : Config.log_color)
     end
 
     def tty?
