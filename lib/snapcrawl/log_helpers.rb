@@ -1,45 +1,23 @@
+require 'colsole'
+
 module Snapcrawl
   module LogHelpers
+    include Colsole
+
     SEVERITY_COLORS = {
-      'INFO' => :blue,
-      'WARN' => :yellow,
-      'ERROR' => :red,
-      'FATAL' => :red,
-      'DEBUG' => :cyan
+      'INFO' => :txtblu,
+      'WARN' => :txtylw,
+      'ERROR' => :txtred,
+      'FATAL' => :txtred,
+      'DEBUG' => :txtcyn
     }
     
     def log_formatter
       proc do |severity, _time, _prog, message|
         severity_color = SEVERITY_COLORS[severity]
-
-        "%{#{severity_color}}#{severity.rjust 5}%{reset} : #{message}\n" % log_colors
+        line = "!#{severity_color}!#{severity.rjust 5}!txtrst! : #{message}\n"
+        colors? ? colorize(line) : strip_color_markers(line)
       end
-    end
-
-    def log_colors
-      @log_colors ||= log_colors!
-    end
-
-    def log_colors!
-      colors? ? actual_colors : empty_colors
-    end
-
-    def actual_colors
-      {
-        red: "\e[31m", green: "\e[32m", yellow: "\e[33m",
-        blue: "\e[34m", purple: "\e[35m", cyan: "\e[36m",
-        underlined: "\e[4m", bold: "\e[1m",
-        none: "", reset: "\e[0m"
-      }
-    end
-
-    def empty_colors
-      {
-        red: "", green: "", yellow: "", 
-        blue: "", purple: "", cyan: "",
-        underlined: "", bold: "",
-        none: "", reset: ""
-      }
     end
 
     def colors?
@@ -52,6 +30,10 @@ module Snapcrawl
 
     def tty?
       ENV['TTY'] == 'on' ? true : ENV['TTY'] == 'off' ? false : $stdout.tty?
+    end
+
+    def strip_color_markers(text)
+      text.gsub(/\!([a-z]{6})\!/, '')
     end
   end
 end

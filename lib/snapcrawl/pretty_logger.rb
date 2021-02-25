@@ -5,7 +5,7 @@ module Snapcrawl
     extend LogHelpers
 
     def self.new
-      Logger.new(STDOUT, formatter: log_formatter, level: Config.log_level)
+      Logger.new($stdout, formatter: log_formatter, level: Config.log_level)
     end
   end
 end

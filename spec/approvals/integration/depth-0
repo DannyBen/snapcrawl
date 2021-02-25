@@ -1,6 +1,6 @@
-[36mDEBUG[0m : initializing cli
-[36mDEBUG[0m : initializing crawler with [32mhttp://localhost:3000[0m
-[36mDEBUG[0m : config {"depth"=>0, "width"=>1280, "height"=>0, "cache_life"=>86400, "cache_dir"=>"cache", "snaps_dir"=>"snaps", "name_template"=>"%{url}", "url_whitelist"=>nil, "url_blacklist"=>nil, "css_selector"=>nil, "log_level"=>1, "log_color"=>"auto"}
-[36mDEBUG[0m : processing queue: [32m1 remaining[0m
-[34m INFO[0m : processing [35m[4mhttp://localhost:3000[0m, depth: 0
-[34m INFO[0m : screenshot for / already exists
+[0;36mDEBUG[0m : initializing cli
+[0;36mDEBUG[0m : initializing crawler with [0;32mhttp://localhost:3000
+[0m[0;36mDEBUG[0m : config {"depth"=>0, "width"=>1280, "height"=>0, "cache_life"=>86400, "cache_dir"=>"cache", "snaps_dir"=>"snaps", "name_template"=>"%%{url}", "url_whitelist"=>nil, "url_blacklist"=>nil, "css_selector"=>nil, "log_level"=>1, "log_color"=>"auto"}
+[0;36mDEBUG[0m : processing queue: [0;32m1 remaining
+[0m[0;34m INFO[0m : processing [4;35mhttp://localhost:3000[0m, depth: 0
+[0;34m INFO[0m : screenshot for / already exists

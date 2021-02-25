@@ -55,13 +55,13 @@ module Snapcrawl
       response = cache.get(url) { HTTParty.get url }
 
       if !response.success?
-        $logger.warn "http error on %{purple}%{underlined}#{url}%{reset}, code: %{yellow}#{response.code}%{reset}, message: #{response.message.strip}"
+        $logger.warn "http error on !undpur!#{url}!txtrst!, code: !txtylw!#{response.code}!txtrst!, message: #{response.message.strip}"
       end
 
       response
 
     rescue => e
-      $logger.error "http error on %{purple}%{underlined}#{url}%{reset} - %{red}#{e.class}%{reset}: #{e.message}"
+      $logger.error "http error on !undpur!#{url}!txtrst! - !txtred!#{e.class}!txtrst!: #{e.message}"
       nil
 
     end
@@ -95,7 +95,7 @@ module Snapcrawl
       begin
         link = Addressable::URI.join(url, link).to_s.dup
       rescue => e
-        $logger.warn "%{red}#{e.class}%{reset}: #{e.message} on #{path} (link: #{link})"
+        $logger.warn "!txtred!#{e.class}!txtrst!: #{e.message} on #{path} (link: #{link})"
         return nil
       end
 
