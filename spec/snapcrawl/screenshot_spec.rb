@@ -40,6 +40,16 @@ describe Screenshot do
       end
     end
 
+    context "when Config.screenshot_delay is set", :focus do
+      before { Config.screenshot_delay = 3 }
+      after { Config.screenshot_delay = nil }
+
+      it "sends the timeout argument to webshot" do
+        expect(Webshot::Screenshot.instance).to receive(:capture).with(String, String, hash_including({ timeout: 3 }))
+        subject.save "tmp/delay.png"
+      end
+    end
+
     context "when there is an error" do
       let(:url) { "http://localhost:1111" }
 

@@ -40,7 +40,8 @@ module Snapcrawl
           css_selector: nil,
           log_level: 1,
           log_color: 'auto',
-          skip_ssl_verification: false
+          skip_ssl_verification: false,
+          screenshot_delay: nil
         }
       end
 

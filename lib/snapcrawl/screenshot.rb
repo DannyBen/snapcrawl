@@ -12,27 +12,20 @@ module Snapcrawl
 
     def save(outfile = nil)
       outfile ||= "#{url.to_slug}.png"
-
-      fetch_opts = { allowed_status_codes: [404, 401, 403] }
-      if Config.selector
-        fetch_opts[:selector] = Config.selector
-        fetch_opts[:full] = false
-      end
-
-      webshot_capture url, outfile, fetch_opts
+      webshot_capture url, outfile
     end
 
   private
 
-    def webshot_capture(url, image_path, fetch_opts)
-      webshot_capture! url, image_path, fetch_opts
+    def webshot_capture(url, image_path)
+      webshot_capture! url, image_path
     rescue => e
       raise ScreenshotError, "#{e.class} #{e.message}"
     end
 
-    def webshot_capture!(url, image_path, fetch_opts)
+    def webshot_capture!(url, image_path)
       hide_output do
-        webshot.capture url, image_path, fetch_opts do |magick|
+        webshot.capture url, image_path, webshot_options do |magick|
           magick.combine_options do |c|
             c.background "white"
             c.gravity 'north'
@@ -41,6 +34,21 @@ module Snapcrawl
           end
         end
       end
+    end
+
+    def webshot_options
+      result = { allowed_status_codes: [404, 401, 403] }
+      
+      if Config.selector
+        result[:selector] = Config.selector
+        result[:full] = false
+      end
+
+      if Config.screenshot_delay
+        result[:timeout] = Config.screenshot_delay
+      end
+
+      result
     end
 
     def webshot

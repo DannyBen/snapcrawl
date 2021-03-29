@@ -1,6 +1,6 @@
 [0;36mDEBUG[0m : initializing cli
 [0;36mDEBUG[0m : initializing crawler with [0;32mhttp://localhost:3000/filters
-[0m[0;36mDEBUG[0m : config {"depth"=>1, "width"=>1280, "height"=>0, "cache_life"=>86400, "cache_dir"=>"cache", "snaps_dir"=>"snaps", "name_template"=>"%%{url}", "url_whitelist"=>nil, "url_blacklist"=>"exclude", "css_selector"=>nil, "log_level"=>0, "log_color"=>"auto", "skip_ssl_verification"=>false}
+[0m[0;36mDEBUG[0m : config {"depth"=>1, "width"=>1280, "height"=>0, "cache_life"=>86400, "cache_dir"=>"cache", "snaps_dir"=>"snaps", "name_template"=>"%%{url}", "url_whitelist"=>nil, "url_blacklist"=>"exclude", "css_selector"=>nil, "log_level"=>0, "log_color"=>"auto", "skip_ssl_verification"=>false, "screenshot_delay"=>nil}
 [0;36mDEBUG[0m : processing queue: [0;32m1 remaining
 [0m[0;34m INFO[0m : processing [4;35mhttp://localhost:3000/filters[0m, depth: 0
 [0;34m INFO[0m : screenshot for /filters already exists
