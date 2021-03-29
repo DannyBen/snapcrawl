@@ -12,3 +12,4 @@ css_selector:
 log_level: 3
 log_color: false
 skip_ssl_verification: false
+screenshot_delay: 

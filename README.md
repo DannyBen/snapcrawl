@@ -115,6 +115,11 @@ css_selector:
 
 # when true, ignore SSL related errors
 skip_ssl_verification: false
+
+# set to any number of seconds to wait for the page to load before taking
+# a screenshot, leave empty to not wait at all (only needed for pages with
+# animations or other post-load events).
+screenshot_delay: 
 ```
 
 ## Contributing / Support
