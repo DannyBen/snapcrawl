@@ -40,7 +40,7 @@ describe Screenshot do
       end
     end
 
-    context "when Config.screenshot_delay is set", :focus do
+    context "when Config.screenshot_delay is set" do
       before { Config.screenshot_delay = 3 }
       after { Config.screenshot_delay = nil }
 
