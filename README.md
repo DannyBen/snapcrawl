@@ -112,6 +112,9 @@ url_blacklist:
 
 # take a screenshot of this CSS selector only
 css_selector: 
+
+# when true, ignore SSL related errors
+skip_ssl_verification: false
 ```
 
 ## Contributing / Support

@@ -26,8 +26,27 @@ describe Page do
       it "returns false and logs an error" do
         expect($logger).to receive(:error).with(/connection refused/i)
         expect(subject).not_to be_valid
-      end      
+      end
     end
+
+    context "when the url has a bad SSL certificate" do
+      let(:url) { 'https://untrusted-root.badssl.com/' }
+
+      it "returns false and logs an error" do
+        expect($logger).to receive(:error).with(/certificate verify failed/i)
+        expect(subject).not_to be_valid
+      end
+
+      context "when skip_ssl_verification is true" do
+        before { Config.skip_ssl_verification = true }
+        after { Config.skip_ssl_verification = false }
+
+        it "returns true" do
+          expect(subject).to be_valid
+        end        
+      end
+
+    end    
   end
 
   describe '#site' do

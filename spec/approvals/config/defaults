@@ -11,3 +11,4 @@ url_blacklist:
 css_selector: 
 log_level: 1
 log_color: auto
+skip_ssl_verification: false
