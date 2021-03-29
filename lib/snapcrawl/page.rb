@@ -52,7 +52,7 @@ module Snapcrawl
     end
 
     def http_response!
-      response = cache.get(url) { HTTParty.get url }
+      response = cache.get(url) { HTTParty.get url, httparty_options }
 
       if !response.success?
         $logger.warn "http error on !undpur!#{url}!txtrst!, code: !txtylw!#{response.code}!txtrst!, message: #{response.message.strip}"
@@ -64,6 +64,10 @@ module Snapcrawl
       $logger.error "http error on !undpur!#{url}!txtrst! - !txtred!#{e.class}!txtrst!: #{e.message}"
       nil
 
+    end
+
+    def httparty_options
+      Config.skip_ssl_verification ? { verify: false } : {}
     end
 
     def normalize_links(links)

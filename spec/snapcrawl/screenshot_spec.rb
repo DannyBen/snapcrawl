@@ -40,7 +40,7 @@ describe Screenshot do
       end
     end
 
-    context "when there is an error", :focus do
+    context "when there is an error" do
       let(:url) { "http://localhost:1111" }
 
       it "raises ScreenshotError" do
