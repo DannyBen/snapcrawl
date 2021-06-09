@@ -86,4 +86,12 @@ describe Page do
       subject.save_screenshot 'outfile'
     end
   end
+
+  describe '#filename_variables' do
+    it "returns a hash with page properties" do
+      expect(subject.filename_variables[:url]).to eq "http-localhost-3000-page"
+      expect(subject.filename_variables[:depth]).to eq 0
+    end
+  end
+
 end
