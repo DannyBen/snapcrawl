@@ -45,6 +45,10 @@ module Snapcrawl
       Screenshot.new(url).save "#{outfile}"
     end
 
+    def filename_variables
+      { url: url.to_slug, depth: depth }
+    end
+
   private
 
     def http_response

@@ -54,7 +54,7 @@ module Snapcrawl
     end
 
     def process_page(page)
-      outfile = "#{Config.snaps_dir}/#{Config.name_template}.png" % { url: page.url.to_slug }
+      outfile = "#{Config.snaps_dir}/#{Config.name_template}.png" % page.filename_variables
 
       $logger.info "processing !undpur!#{page.url}!txtrst!, depth: #{page.depth}"
 
