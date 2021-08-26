@@ -1,4 +1,4 @@
-[0;33m WARN[0m : [0;31mAddressable::URI::InvalidURIError[0m: Invalid scheme format: \problematic  on /page (link: \problematic : link)
+[0;33m WARN[0m : [0;31mAddressable::URI::InvalidURIError[0m: Invalid scheme format: '\problematic ' on /page (link: \problematic : link)
 [0;33m WARN[0m : http error on [4;35mhttp://localhost:3000/broken[0m, code: [0;33m404[0m, message: Not Found
 [0;33m WARN[0m : http error on [4;35mhttp://localhost:3000/secret[0m, code: [0;33m401[0m, message: Unauthorized
 [0;33m WARN[0m : http error on [4;35mhttp://localhost:3000/500[0m, code: [0;33m500[0m, message: Internal Server Error
