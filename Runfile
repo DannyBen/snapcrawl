@@ -21,52 +21,21 @@ end
 
 help   "Generate changelog and append old changelog"
 action :changelog do
-  run "git changelog --save"
+  system "git changelog --save"
   # append older changelog (prior to switching to git-changelog)
-  run "cat .changelog.old.md >> CHANGELOG.md"
+  system "cat .changelog.old.md >> CHANGELOG.md"
 end
 
-command :server
-
-usage  "start [--daemon]"
-help   "Start the server"
-option "-d --daemon", "Start server in the background"
-action :start do |args|
-  if args['--daemon'] 
-    run_as_daemon
-  else
-    run_at_front
+usage  "mockserver"
+help   "Start the mock server"
+action :mockserver do
+  Dir.chdir 'spec/server' do
+    system 'rackup -p 3000 -o 0.0.0.0'
   end
+rescue Interrupt
+  abort "\rBye"
 end
 
-help   "Stop the daemon server"
-action :stop do
-  Dir.chdir 'spec/server' do 
-    stop_bg 'sinatra'
-  end
-end
 
-endcommand
-
-def run_as_daemon
-  Dir.chdir 'spec/server' do 
-    if File.exist? 'sinatra.pid' 
-      abort "Server may already be running.\nIf it is not, delete the 'sinatra.pid' file."
-    end
-
-    run_bg 'rackup -p 3000 -o 0.0.0.0', pid: 'sinatra'
-  end
-  say "!txtblu!Sinatra started. 'run server stop' to stop."
-end
-
-def run_at_front
-  begin
-    Dir.chdir 'spec/server' do
-      run 'rackup -p 3000 -o 0.0.0.0'
-    end
-  rescue Interrupt
-    abort "\rBye"
-  end
-end
 
 require_relative 'debug' if File.exist? 'debug.rb'
