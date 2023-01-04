@@ -1,12 +1,10 @@
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'date'
 require 'snapcrawl/version'
 
 Gem::Specification.new do |s|
   s.name        = 'snapcrawl'
   s.version     = Snapcrawl::VERSION
-  s.date        = Date.today.to_s
   s.summary     = "Crawl a website and take screenshots (CLI + Library)"
   s.description = "Snapcrawl is a command line utility for crawling a website and saving screenshots."
   s.authors     = ["Danny Ben Shitrit"]
@@ -15,7 +13,7 @@ Gem::Specification.new do |s|
   s.executables = ["snapcrawl"]
   s.homepage    = 'https://github.com/DannyBen/snapcrawl'
   s.license     = 'MIT'
-  s.required_ruby_version = '>= 2.3'
+  s.required_ruby_version = '>= 2.7'
 
   s.add_runtime_dependency 'colsole', '~> 0.7'
   s.add_runtime_dependency 'docopt', '~> 0.6'
