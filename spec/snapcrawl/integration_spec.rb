@@ -4,15 +4,14 @@ describe 'integration' do
   subject { CLI.new }
 
   let(:url) { 'http://localhost:3000' }
+  let(:log) { @logger.string }
 
   before do
     @logger = fresh_logger
     Config.load   # reload defaults
   end
 
-  let(:log) { @logger.string }
-
-  it 'works' do
+  it 'executes successfully' do
     subject.call [url]
     expect(log).to match_approval('integration/default-config')
   end

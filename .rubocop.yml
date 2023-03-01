@@ -1,11 +1,11 @@
 require:
   - rubocop-performance
-  # - rubocop-rspec
+  - rubocop-rspec
 
 inherit_gem:
   rentacop:
     - rentacop.yml
-    # - rspec.yml
+    - rspec.yml
 
 AllCops:
   TargetRubyVersion: 2.7
@@ -15,3 +15,9 @@ AllCops:
 Style/GlobalVars:
   AllowedVariables:
     - '$logger'
+
+RSpec/AnyInstance:
+  Enabled: false
+
+RSpec/InstanceVariable:
+  Enabled: false

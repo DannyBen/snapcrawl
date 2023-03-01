@@ -12,7 +12,7 @@ describe PrettyLogger do
   describe 'log formatting' do
     let(:message) { 'g`Hello World`' }
 
-    it 'works' do
+    it 'logs with colors' do
       expect { subject.info message }.to output_approval('models/pretty_logger/colors')
     end
   end

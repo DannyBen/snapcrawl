@@ -73,7 +73,7 @@ describe Page do
       expect($logger).to receive(:warn).with(/problematic/)
       pages = subject.pages
       expect(pages.count).to eq 2
-      expect(pages.first).to be_a Page
+      expect(pages.first).to be_a described_class
     end
   end
 
@@ -81,7 +81,7 @@ describe Page do
     let(:double) { Screenshot.new subject.url }
 
     it 'delegates to Screenshot' do
-      expect(Screenshot).to receive(:new).with(subject.url).and_return(double)
+      allow(Screenshot).to receive(:new).with(subject.url).and_return(double)
       expect(double).to receive(:save).with('outfile')
       subject.save_screenshot 'outfile'
     end
