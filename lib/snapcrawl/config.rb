@@ -7,19 +7,19 @@ module Snapcrawl
       def load(file = nil)
         reset!
         push defaults
-        
+
         return unless file
 
-        file = "#{file}.yml" unless file =~ /\.ya?ml$/
+        file = "#{file}.yml" unless /\.ya?ml$/.match?(file)
 
         # FIXME: Cannot use logger here due to the "chicken and egg" with
         #        Config. The $logger is available, but it was not yet fully
         #        configured with log_level etc.
         if File.exist? file
-          # $logger.debug "loading config file !txtgrn!#{file}"
+          # $logger.debug "loading config file g`#{file}`"
           push file
         else
-          # $logger.debug "creating config file !txtgrn!#{file}"
+          # $logger.debug "creating config file g`#{file}`"
           create_config file
         end
       end
@@ -28,20 +28,20 @@ module Snapcrawl
 
       def defaults
         {
-          depth: 1,
-          width: 1280,
-          height: 0,
-          cache_life: 86400,
-          cache_dir: 'cache',
-          snaps_dir: 'snaps',
-          name_template: '%{url}',
-          url_whitelist: nil,
-          url_blacklist: nil,
-          css_selector: nil,
-          log_level: 1,
-          log_color: 'auto',
+          depth:                 1,
+          width:                 1280,
+          height:                0,
+          cache_life:            86_400,
+          cache_dir:             'cache',
+          snaps_dir:             'snaps',
+          name_template:         '%{url}',
+          url_whitelist:         nil,
+          url_blacklist:         nil,
+          css_selector:          nil,
+          log_level:             1,
+          log_color:             'auto',
           skip_ssl_verification: false,
-          screenshot_delay: nil
+          screenshot_delay:      nil,
         }
       end
 
@@ -55,7 +55,6 @@ module Snapcrawl
       def config_template
         File.expand_path 'templates/config.yml', __dir__
       end
-
     end
   end
 end

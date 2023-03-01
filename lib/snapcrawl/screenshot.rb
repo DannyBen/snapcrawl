@@ -27,10 +27,10 @@ module Snapcrawl
       hide_output do
         webshot.capture url, image_path, webshot_options do |magick|
           magick.combine_options do |c|
-            c.background "white"
+            c.background 'white'
             c.gravity 'north'
             c.quality 100
-            c.extent Config.height > 0 ? "#{Config.width}x#{Config.height}" : "#{Config.width}x"
+            c.extent Config.height.positive? ? "#{Config.width}x#{Config.height}" : "#{Config.width}x"
           end
         end
       end
@@ -38,7 +38,7 @@ module Snapcrawl
 
     def webshot_options
       result = { allowed_status_codes: [404, 401, 403] }
-      
+
       if Config.selector
         result[:selector] = Config.selector
         result[:full] = false
@@ -55,16 +55,19 @@ module Snapcrawl
       @webshot ||= Webshot::Screenshot.instance
     end
 
-    # The webshot gem messes with stdout/stderr streams so we keep it in 
+    # The webshot gem messes with stdout/stderr streams so we keep it in
     # check by using this method. Also, in some sites (e.g. uown.co) it
     # prints some output to stdout, this is why we override $stdout for
     # the duration of the run.
     def hide_output
-      keep_stdout, keep_stderr = $stdout, $stderr
-      $stdout, $stderr = StringIO.new, StringIO.new
+      keep_stdout = $stdout
+      keep_stderr = $stderr
+      $stdout = StringIO.new
+      $stderr = StringIO.new
       yield
     ensure
-      $stdout, $stderr = keep_stdout, keep_stderr
+      $stdout = keep_stdout
+      $stderr = keep_stderr
     end
   end
 end

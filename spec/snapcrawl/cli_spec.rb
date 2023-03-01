@@ -1,9 +1,9 @@
 require 'spec_helper'
 
 describe CLI do
-  subject { CLI.new }
+  subject { described_class.new }
 
-  it "works" do
+  it 'shows usage' do
     expect { subject.call }.to output_approval('cli/usage')
   end
 end
