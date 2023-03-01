@@ -5,18 +5,18 @@ module Snapcrawl
     include Colsole
 
     SEVERITY_COLORS = {
-      'INFO' => :txtblu,
-      'WARN' => :txtylw,
-      'ERROR' => :txtred,
-      'FATAL' => :txtred,
-      'DEBUG' => :txtcyn
+      'INFO'  => :b,
+      'WARN'  => :y,
+      'ERROR' => :r,
+      'FATAL' => :r,
+      'DEBUG' => :c,
     }
-    
+
     def log_formatter
       proc do |severity, _time, _prog, message|
         severity_color = SEVERITY_COLORS[severity]
-        line = "!#{severity_color}!#{severity.rjust 5}!txtrst! : #{message}\n"
-        use_colors? ? colorize(line) : strip_color_markers(line)
+        line = "#{severity_color}`#{severity.rjust 5}` : #{message}\n"
+        use_colors? ? colorize(line) : strip_colors(line)
       end
     end
 
@@ -25,11 +25,12 @@ module Snapcrawl
     end
 
     def tty?
-      ENV['TTY'] == 'on' ? true : ENV['TTY'] == 'off' ? false : $stdout.tty?
-    end
-
-    def strip_color_markers(text)
-      text.gsub(/\!([a-z]{6})\!/, '')
+      case ENV['TTY']
+      when 'on' then true
+      when 'off' then false
+      else
+        $stdout.tty?
+      end
     end
   end
 end

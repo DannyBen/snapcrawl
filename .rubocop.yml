@@ -1,0 +1,17 @@
+require:
+  - rubocop-performance
+  # - rubocop-rspec
+
+inherit_gem:
+  rentacop:
+    - rentacop.yml
+    # - rspec.yml
+
+AllCops:
+  TargetRubyVersion: 2.7
+  Exclude:
+    - dev/**/*
+
+Style/GlobalVars:
+  AllowedVariables:
+    - '$logger'

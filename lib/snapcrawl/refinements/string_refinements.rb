@@ -6,7 +6,7 @@ module Snapcrawl
       end
 
       def protocolize
-        self =~ /^http/ ? self : "http://#{self}"
+        /^http/.match?(self) ? self : "http://#{self}"
       end
     end
   end

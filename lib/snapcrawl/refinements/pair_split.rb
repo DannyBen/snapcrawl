@@ -2,21 +2,24 @@ module Snapcrawl
   module PairSplit
     refine Array do
       def pair_split
-        map do |pair|
+        false_values = %w[no false]
+        true_values = %w[yes true]
+
+        to_h do |pair|
           key, value = pair.split '='
-          
-          value = if value =~ /^\d+$/
-            value.to_i 
-          elsif ['no', 'false'].include? value
+
+          value = if /^\d+$/.match?(value)
+            value.to_i
+          elsif false_values.include? value
             false
-          elsif ['yes', 'true'].include? value
+          elsif true_values.include? value
             true
           else
             value
           end
 
           [key, value]
-        end.to_h
+        end
       end
     end
   end

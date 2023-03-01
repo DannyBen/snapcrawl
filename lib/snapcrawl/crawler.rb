@@ -7,10 +7,10 @@ module Snapcrawl
     attr_reader :url
 
     def initialize(url)
-      $logger.debug "initializing crawler with !txtgrn!#{url}"
-      
+      $logger.debug "initializing crawler with g`#{url}`"
+
       config_for_display = Config.settings.dup
-      config_for_display['name_template'] = '%%{url}' 
+      config_for_display['name_template'] = '%%{url}'
 
       $logger.debug "config #{config_for_display}"
       @url = url
@@ -25,27 +25,27 @@ module Snapcrawl
   private
 
     def process_todo
-      $logger.debug "processing queue: !txtgrn!#{todo.count} remaining"
+      $logger.debug "processing queue: g`#{todo.count} remaining`"
 
       url, page = todo.shift
       done.push url
 
-      if process_page page
-        register_sub_pages page.pages if page.depth < Config.depth
-      end
+      return unless process_page page
+
+      register_sub_pages page.pages if page.depth < Config.depth
     end
 
     def register_sub_pages(pages)
       pages.each do |sub_page|
-        next if todo.has_key?(sub_page) or done.include?(sub_page)
-        
-        if Config.url_whitelist and sub_page.path !~ /#{Config.url_whitelist}/
-          $logger.debug "ignoring !undpur!#{sub_page.url}!txtrst!, reason: whitelist"
+        next if todo.has_key?(sub_page) || done.include?(sub_page)
+
+        if Config.url_whitelist && sub_page.path !~ (/#{Config.url_whitelist}/)
+          $logger.debug "ignoring mu`#{sub_page.url}`, reason: whitelist"
           next
         end
 
-        if Config.url_blacklist and sub_page.path =~ /#{Config.url_blacklist}/
-          $logger.debug "ignoring !undpur!#{sub_page.url}!txtrst!, reason: blacklist"
+        if Config.url_blacklist && sub_page.path =~ (/#{Config.url_blacklist}/)
+          $logger.debug "ignoring mu`#{sub_page.url}`, reason: blacklist"
           next
         end
 
@@ -56,9 +56,9 @@ module Snapcrawl
     def process_page(page)
       outfile = "#{Config.snaps_dir}/#{Config.name_template}.png" % { url: page.url.to_slug }
 
-      $logger.info "processing !undpur!#{page.url}!txtrst!, depth: #{page.depth}"
+      $logger.info "processing mu`#{page.url}`, depth: #{page.depth}"
 
-      if !page.valid?
+      unless page.valid?
         $logger.debug "page #{page.path} is invalid, aborting process"
         return false
       end
@@ -66,7 +66,7 @@ module Snapcrawl
       if file_fresh? outfile
         $logger.info "screenshot for #{page.path} already exists"
       else
-        $logger.info "!bldgrn!capturing screenshot for #{page.path}"
+        $logger.info "gb`capturing screenshot for #{page.path}`"
         save_screenshot page, outfile
       end
 
@@ -76,11 +76,11 @@ module Snapcrawl
     def save_screenshot(page, outfile)
       page.save_screenshot outfile
     rescue => e
-      $logger.error "screenshot error on !undpur!#{page.path}!txtrst! - !txtred!#{e.class}!txtrst!: #{e.message}"
+      $logger.error "screenshot error on mu`#{page.path}` - r`#{e.class}`: #{e.message}"
     end
 
     def file_fresh?(file)
-      Config.cache_life > 0 and File.exist?(file) and file_age(file) < Config.cache_life
+      Config.cache_life.positive? and File.exist?(file) and file_age(file) < Config.cache_life
     end
 
     def file_age(file)
@@ -94,6 +94,5 @@ module Snapcrawl
     def done
       @done ||= []
     end
-
   end
 end

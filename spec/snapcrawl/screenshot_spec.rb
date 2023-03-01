@@ -1,38 +1,39 @@
 require 'spec_helper'
 
 describe Screenshot do
-  let(:url) { 'http://localhost:3000/page' }
   subject { described_class.new url }
+
+  let(:url) { 'http://localhost:3000/page' }
 
   describe '#save' do
     let(:outfile) { 'tmp/screenshot.png' }
 
     before do
-      system "rm -f tmp/*.png"
+      system 'rm -f tmp/*.png'
       expect(Dir['tmp/*.png'].count).to eq 0
     end
-    
-    it "saves a screenshot" do
+
+    it 'saves a screenshot' do
       subject.save outfile
       expect(File).to exist outfile
-      expect(File.size outfile).to be > 22000
+      expect(File.size outfile).to be > 22_000
     end
 
-    context "when Config.selector is set" do
-      let(:url) { "http://localhost:3000/selector" }
+    context 'when Config.selector is set' do
+      let(:url) { 'http://localhost:3000/selector' }
 
       before do
         Config.selector = nil
-        subject.save "tmp/full-page.png"
+        subject.save 'tmp/full-page.png'
       end
 
       after do
         Config.selector = nil
       end
 
-      it "only captures the selected area" do
+      it 'only captures the selected area' do
         Config.selector = '.select-me'
-        subject.save "tmp/selected-area.png"
+        subject.save 'tmp/selected-area.png'
         full_size = File.size('tmp/full-page.png')
         selected_size = File.size('tmp/selected-area.png')
 
@@ -40,24 +41,22 @@ describe Screenshot do
       end
     end
 
-    context "when Config.screenshot_delay is set" do
+    context 'when Config.screenshot_delay is set' do
       before { Config.screenshot_delay = 3 }
       after { Config.screenshot_delay = nil }
 
-      it "sends the timeout argument to webshot" do
+      it 'sends the timeout argument to webshot' do
         expect(Webshot::Screenshot.instance).to receive(:capture).with(String, String, hash_including({ timeout: 3 }))
-        subject.save "tmp/delay.png"
+        subject.save 'tmp/delay.png'
       end
     end
 
-    context "when there is an error" do
-      let(:url) { "http://localhost:1111" }
+    context 'when there is an error' do
+      let(:url) { 'http://localhost:1111' }
 
-      it "raises ScreenshotError" do
+      it 'raises ScreenshotError' do
         expect { subject.save outfile }.to raise_error(ScreenshotError)
       end
     end
-
   end
 end
-

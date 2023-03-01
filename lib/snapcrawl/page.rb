@@ -10,11 +10,12 @@ module Snapcrawl
 
     attr_reader :url, :depth
 
-    EXTENSION_BLACKLIST = "png|gif|jpg|pdf|zip"
-    PROTOCOL_BLACKLIST = "mailto|tel"
+    EXTENSION_BLACKLIST = 'png|gif|jpg|pdf|zip'
+    PROTOCOL_BLACKLIST = 'mailto|tel'
 
     def initialize(url, depth: 0)
-      @url, @depth = url.protocolize, depth
+      @url = url.protocolize
+      @depth = depth
     end
 
     def valid?
@@ -31,18 +32,21 @@ module Snapcrawl
 
     def links
       return nil unless valid?
+
       doc = Nokogiri::HTML http_response.body
       normalize_links doc.css('a')
     end
 
     def pages
       return nil unless valid?
-      links.map { |link| Page.new link, depth: depth+1 }
+
+      links.map { |link| Page.new link, depth: depth + 1 }
     end
 
     def save_screenshot(outfile)
       return false unless valid?
-      Screenshot.new(url).save "#{outfile}"
+
+      Screenshot.new(url).save outfile
     end
 
   private
@@ -54,16 +58,14 @@ module Snapcrawl
     def http_response!
       response = cache.get(url) { HTTParty.get url, httparty_options }
 
-      if !response.success?
-        $logger.warn "http error on !undpur!#{url}!txtrst!, code: !txtylw!#{response.code}!txtrst!, message: #{response.message.strip}"
+      unless response.success?
+        $logger.warn "http error on mu`#{url}`, code: y`#{response.code}`, message: #{response.message.strip}"
       end
 
       response
-
     rescue => e
-      $logger.error "http error on !undpur!#{url}!txtrst! - !txtred!#{e.class}!txtrst!: #{e.message}"
+      $logger.error "http error on mu`#{url}` - r`#{e.class}`: #{e.message}"
       nil
-
     end
 
     def httparty_options
@@ -89,8 +91,8 @@ module Snapcrawl
       return nil if link.empty?
 
       # Remove links to specific extensions and protocols
-      return nil if link =~ /\.(#{EXTENSION_BLACKLIST})(\?.*)?$/
-      return nil if link =~ /^(#{PROTOCOL_BLACKLIST}):/
+      return nil if /\.(#{EXTENSION_BLACKLIST})(\?.*)?$/o.match?(link)
+      return nil if /^(#{PROTOCOL_BLACKLIST}):/o.match?(link)
 
       # Strip spaces
       link.strip!
@@ -99,12 +101,13 @@ module Snapcrawl
       begin
         link = Addressable::URI.join(url, link).to_s.dup
       rescue => e
-        $logger.warn "!txtred!#{e.class}!txtrst!: #{e.message} on #{path} (link: #{link})"
+        $logger.warn "r`#{e.class}`: #{e.message} on #{path} (link: #{link})"
         return nil
       end
 
       # Keep only links in our base domain
       return nil unless link.include? site
+
       link
     end
 

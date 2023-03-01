@@ -7,13 +7,11 @@ module Snapcrawl
     include Colsole
     using StringRefinements
     using PairSplit
-    
+
     def call(args = [])
-      begin
-        execute Docopt::docopt(docopt, version: VERSION, argv: args)
-      rescue Docopt::Exit => e
-        puts e.message
-      end
+      execute Docopt.docopt(docopt, version: VERSION, argv: args)
+    rescue Docopt::Exit => e
+      puts e.message
     end
 
   private
@@ -26,7 +24,7 @@ module Snapcrawl
       apply_tweaks tweaks if tweaks
 
       Dependencies.verify
-      
+
       $logger.debug 'initializing cli'
       FileUtils.mkdir_p Config.snaps_dir
 
@@ -37,11 +35,11 @@ module Snapcrawl
     end
 
     def docopt
-      @doc ||= File.read docopt_path
+      @docopt ||= File.read docopt_path
     end
 
     def docopt_path
-      File.expand_path "templates/docopt.txt", __dir__
+      File.expand_path 'templates/docopt.txt', __dir__
     end
 
     def apply_tweaks(tweaks)
@@ -50,6 +48,5 @@ module Snapcrawl
         $logger.level = value if key == 'log_level'
       end
     end
-
   end
 end

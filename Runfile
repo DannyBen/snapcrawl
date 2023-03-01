@@ -1,14 +1,11 @@
-require "snapcrawl"
-require "runfile-tasks"
-require_relative 'lib/snapcrawl/version'
+require 'snapcrawl/version'
 
-title   "Snapcrawl Runfile"
-summary "Runfile tasks for building the Snapcrawl gem"
+title   'Snapcrawl Runfile'
+summary 'Runfile tasks for building the Snapcrawl gem'
 version Snapcrawl::VERSION
 
-RunfileTasks::RubyGems.all 'snapcrawl'
-RunfileTasks::Testing.rspec
-RunfileTasks::Docs.rdoc
+import_gem 'runfile-tasks/gem'
+import 'debug'
 
 help   "Regenerate the command line output in the README file"
 action :patchme do
@@ -36,6 +33,3 @@ rescue Interrupt
   abort "\rBye"
 end
 
-
-
-require_relative 'debug' if File.exist? 'debug.rb'

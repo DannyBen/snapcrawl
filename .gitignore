@@ -2,7 +2,7 @@
 *.sublime*
 /cache
 /coverage
-/debug.rb
+/debug.runfile
 /dev
 /doc
 /err.txt
