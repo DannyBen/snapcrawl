@@ -39,8 +39,8 @@ module Snapcrawl
     def webshot_options
       result = { allowed_status_codes: [404, 401, 403] }
 
-      if Config.selector
-        result[:selector] = Config.selector
+      if Config.css_selector
+        result[:selector] = Config.css_selector
         result[:full] = false
       end
 

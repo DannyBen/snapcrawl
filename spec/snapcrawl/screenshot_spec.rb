@@ -19,20 +19,20 @@ describe Screenshot do
       expect(File.size outfile).to be > 22_000
     end
 
-    context 'when Config.selector is set' do
+    context 'when Config.css_selector is set' do
       let(:url) { 'http://localhost:3000/selector' }
 
       before do
-        Config.selector = nil
+        Config.css_selector = nil
         subject.save 'tmp/full-page.png'
       end
 
       after do
-        Config.selector = nil
+        Config.css_selector = nil
       end
 
       it 'only captures the selected area' do
-        Config.selector = '.select-me'
+        Config.css_selector = '.select-me'
         subject.save 'tmp/selected-area.png'
         full_size = File.size('tmp/full-page.png')
         selected_size = File.size('tmp/selected-area.png')

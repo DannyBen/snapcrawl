@@ -18,4 +18,5 @@ system 'mkdir -p tmp'
 require_relative 'spec_mixin'
 RSpec.configure do |config|
   config.include SpecMixin
+  config.example_status_persistence_file_path = 'spec/status.txt'
 end
