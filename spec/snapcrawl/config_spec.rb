@@ -4,7 +4,7 @@ describe Config do
   subject { described_class }
 
   describe '#load' do
-    it 'has defaults', :focus do
+    it 'has defaults' do
       subject.load
       expect(subject.settings.to_yaml).to match_approval('config/defaults').diff(4)
     end
