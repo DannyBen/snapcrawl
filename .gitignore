@@ -13,3 +13,4 @@
 /snaps
 /tmp
 sinatra.pid
+spec/status.txt

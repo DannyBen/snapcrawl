@@ -6,10 +6,10 @@ cache_life: 86400
 cache_dir: cache
 snaps_dir: snaps
 name_template: "%{url}"
-url_whitelist: 
-url_blacklist: 
-css_selector: 
+url_whitelist:
+url_blacklist:
+css_selector:
 log_level: 3
 log_color: false
 skip_ssl_verification: false
-screenshot_delay: 
+screenshot_delay:
