@@ -1,3 +1,3 @@
 module Snapcrawl
-  VERSION = '0.5.4.rc1'
+  VERSION = '0.5.4'
 end
