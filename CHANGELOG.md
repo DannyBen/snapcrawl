@@ -1,6 +1,15 @@
 Change Log
 ========================================
 
+v0.5.4 - 2023-07-27
+----------------------------------------
+
+- Drop support for Ruby <= 2.6
+- Upgrade dependencies and rubocop cleanup
+- Fix css_selector option
+- Drop support for Ruby 2.x
+
+
 v0.5.3 - 2021-03-29
 ----------------------------------------
 
