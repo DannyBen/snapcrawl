@@ -15,7 +15,7 @@ screenshots.
 
 Snapcrawl relies on two deprecated libraries:  
 
-- [Webshot](https://github.com/nezirz/ruby_webshot) (last updated in December 2019)  
+- [Webshot](https://github.com/vitalie/webshot) (last updated in August 2020)  
 - [PhantomJS](https://github.com/ariya/phantomjs) (last updated around 2020)  
 
 As such, the project is **no longer actively maintained** and is unlikely to
