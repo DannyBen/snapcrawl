@@ -9,6 +9,23 @@
 Snapcrawl is a command line utility for crawling a website and saving
 screenshots. 
 
+---
+
+## :warning: Project Status: On Hold
+
+Snapcrawl relies on two deprecated libraries:  
+
+- [Webshot](https://github.com/nezirz/ruby_webshot) (last updated in December 2019)  
+- [PhantomJS](https://github.com/ariya/phantomjs) (last updated around 2020)  
+
+As such, the project is **no longer actively maintained** and is unlikely to
+receive updates or bug fixes.  
+
+If you are interested in contributing and have ideas for replacing these
+libraries with modern alternatives, you are welcome to propose changes via
+pull requests or issues.
+
+---
 
 ## Features
 
