@@ -1,27 +1,32 @@
-Change Log
+Changelog
 ========================================
 
 v0.5.4 - 2023-07-27
 ----------------------------------------
 
-- Drop support for Ruby <= 2.6
-- Upgrade dependencies and rubocop cleanup
-- Fix css_selector option
-- Drop support for Ruby 2.x
+- Drop support for Ruby <= 2.6 [`2481735`](https://github.com/dannyben/snapcrawl/commit/2481735)
+- Upgrade dependencies and rubocop cleanup [`ab7d5de`](https://github.com/dannyben/snapcrawl/commit/ab7d5de)
+- Fix css_selector option [`6b0a963`](https://github.com/dannyben/snapcrawl/commit/6b0a963)
+- Drop support for Ruby 2.x [`51e154d`](https://github.com/dannyben/snapcrawl/commit/51e154d)
+- Compare [`v0.5.3..v0.5.4`](https://github.com/dannyben/snapcrawl/compare/v0.5.3..v0.5.4)
 
 
 v0.5.3 - 2021-03-29
 ----------------------------------------
 
-- Add skip_ssl_verification config option
-- Add screenshot_delay config option
+- Add skip_ssl_verification config option [`fd97382`](https://github.com/dannyben/snapcrawl/commit/fd97382)
+- Add screenshot_delay config option [`2f3b118`](https://github.com/dannyben/snapcrawl/commit/2f3b118)
+- Compare [`v0.5.2..v0.5.3`](https://github.com/dannyben/snapcrawl/compare/v0.5.2..v0.5.3)
 
 
 v0.5.2 - 2021-02-25
 ----------------------------------------
 
-- Fix logging percent issue
+- Fix logging percent issue [`9a3944f`](https://github.com/dannyben/snapcrawl/commit/9a3944f)
+- Compare [`v0.5.1..v0.5.2`](https://github.com/dannyben/snapcrawl/compare/v0.5.1..v0.5.2)
 
+
+<!-- break v0.5.1 -->
 
 ## [v0.5.1](https://github.com/DannyBen/snapcrawl/tree/v0.5.1) (2020-03-14)
 

@@ -5,6 +5,8 @@ screenshots.
 
 ---
 
+![repocard](repocard.svg)
+
 ## :warning: Project Status: On Hold
 
 Snapcrawl relies on two deprecated libraries:  
