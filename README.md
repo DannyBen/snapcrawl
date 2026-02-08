@@ -5,7 +5,7 @@ screenshots.
 
 ---
 
-![repocard](repocard.svg)
+![repocard](https://repocard.dannyben.com/svg/snapcrawl.svg)
 
 ## :warning: Project Status: On Hold
 
